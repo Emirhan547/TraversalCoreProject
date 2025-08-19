@@ -1,24 +1,18 @@
 ﻿using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Concrete
 {
-    public class Context : IdentityDbContext<AppUser, AppRole,int>// Fix: inherit from DbContext
+    public class Context : IdentityDbContext<AppUser, AppRole, int>
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public Context(DbContextOptions<Context> options) : base(options)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=localhost\\SQLEXPRESS;" +
-                "Database=TraversalDb;" +
-                "Trusted_Connection=True;" +
-                "TrustServerCertificate=True;"
-            );
+        }
+
+        // Parametresiz constructor (GenericRepository gibi yerlerde lazım olabilir)
+        public Context()
+        {
         }
 
         public DbSet<About> Abouts { get; set; }
@@ -31,8 +25,6 @@ namespace DataAccessLayer.Concrete
         public DbSet<NewsLetter> NewsLetters { get; set; }
         public DbSet<SubAbout> SubAbouts { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
-
         public DbSet<Comment> Comments { get; set; }
-
     }
 }
