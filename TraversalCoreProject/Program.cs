@@ -41,11 +41,30 @@ builder.Services.AddControllersWithViews(cfg =>
     cfg.Filters.Add(new AuthorizeFilter(policy));
 });
 
-// Cookie ayarları
+// Cookie ayarları (Admin ve Member area’ya göre yönlendirme)
 builder.Services.ConfigureApplicationCookie(opt =>
 {
-    opt.LoginPath = "/Login/Index";
     opt.AccessDeniedPath = "/Login/AccessDenied";
+
+    opt.Events.OnRedirectToLogin = context =>
+    {
+        var path = context.Request.Path;
+
+        if (path.StartsWithSegments("/Admin"))
+        {
+            context.Response.Redirect("/Admin/Login/Index");
+        }
+        else if (path.StartsWithSegments("/Member"))
+        {
+            context.Response.Redirect("/Member/Login/Index");
+        }
+        else
+        {
+            context.Response.Redirect("/Login/Index");
+        }
+
+        return Task.CompletedTask;
+    };
 });
 
 var app = builder.Build();
@@ -72,6 +91,5 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 app.Run();
