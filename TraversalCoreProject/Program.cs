@@ -1,12 +1,16 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
+using DataAccessLayer.EntityFramework;
 using DataAccessLayer.Repository;
 using EntityLayer.Concrete;
+using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using TraversalCoreProject.Models; // CustomIdentityValidator burada
+using TraversalCoreProject.Models;
+using BusinessLayer.Container;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +36,9 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 // GenericRepository için DI
 builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 
+// ✅ Business & DataAccess bağımlılıkları
+builder.Services.ContainerDependencies();
+
 // MVC + global authorize policy
 builder.Services.AddControllersWithViews(cfg =>
 {
@@ -41,7 +48,17 @@ builder.Services.AddControllersWithViews(cfg =>
     cfg.Filters.Add(new AuthorizeFilter(policy));
 });
 
-// Cookie ayarları (Admin ve Member area’ya göre yönlendirme)
+// ✅ Logging (kamptaki ConfigureServices karşılığı)
+builder.Services.AddLogging(x =>
+{
+    x.ClearProviders();
+    x.SetMinimumLevel(LogLevel.Debug);
+    x.AddDebug();
+});
+var path = Directory.GetCurrentDirectory();
+builder.Logging.AddFile($"{path}\\Logs\\Log1.txt");
+
+// Cookie ayarları
 builder.Services.ConfigureApplicationCookie(opt =>
 {
     opt.AccessDeniedPath = "/Login/AccessDenied";
@@ -75,7 +92,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

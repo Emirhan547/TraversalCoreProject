@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TraversalCoreProject.Models;
 
-namespace TraversalCoreProject.Controllers
+namespace TraversalCoreProje.Controllers
 {
     [AllowAnonymous]
     public class LoginController : Controller
@@ -18,8 +18,6 @@ namespace TraversalCoreProject.Controllers
             _signInManager = signInManager;
         }
 
-       
-
         [HttpGet]
         public IActionResult SignUp()
         {
@@ -28,21 +26,20 @@ namespace TraversalCoreProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(UserRegisterViewModel p)
         {
-            AppUser appUser = new AppUser
+            AppUser appUser = new AppUser()
             {
                 Name = p.Name,
-                Surname = p.Surname,    
+                Surname = p.Surname,
                 Email = p.Mail,
-                UserName = p.UserName,
-                // You may want to set other properties as needed
+                UserName = p.UserName
             };
             if (p.Password == p.ConfirmPassword)
             {
                 var result = await _userManager.CreateAsync(appUser, p.Password);
-                if (result.Succeeded)
-                    {
-                    return RedirectToAction("SignIn");
 
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("SignIn");
                 }
                 else
                 {
@@ -52,22 +49,23 @@ namespace TraversalCoreProject.Controllers
                     }
                 }
             }
-            return View();
+            return View(p);
         }
+
         [HttpGet]
         public IActionResult SignIn()
         {
             return View();
         }
         [HttpPost]
-        public async Task <IActionResult> SignIn(UserSignInViewModel p)
+        public async Task<IActionResult> SignIn(UserSignInViewModel p)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, false, true);
+                var result = await _signInManager.PasswordSignInAsync(p.username, p.password, false, true);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Profile", new { area= "Member"});
+                    return RedirectToAction("Index", "Profile", new { area = "Member" });
                 }
                 else
                 {

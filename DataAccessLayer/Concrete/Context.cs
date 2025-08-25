@@ -10,7 +10,7 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        // Parametresiz constructor (GenericRepository gibi yerlerde lazım olabilir)
+       
         public Context()
         {
         }
