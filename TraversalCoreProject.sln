@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36401.2 d17.14
+VisualStudioVersion = 17.14.36401.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraversalCoreProject", "TraversalCoreProject\TraversalCoreProject.csproj", "{150E6CB8-44B7-4956-88DC-C5D6DDC2C773}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{BD6BA3A0-1F4A-4B70-B30B-C24A5C9AACA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{B649C882-00DA-430B-92A8-A467D25294E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOLayer", "DTOLayer\DTOLayer.csproj", "{89533359-8E61-4B2F-A28B-4BB89F7E5DEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B649C882-00DA-430B-92A8-A467D25294E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B649C882-00DA-430B-92A8-A467D25294E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B649C882-00DA-430B-92A8-A467D25294E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89533359-8E61-4B2F-A28B-4BB89F7E5DEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89533359-8E61-4B2F-A28B-4BB89F7E5DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89533359-8E61-4B2F-A28B-4BB89F7E5DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89533359-8E61-4B2F-A28B-4BB89F7E5DEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
