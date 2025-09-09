@@ -7,12 +7,16 @@ using DTOLayer.DTOs.AnnouncementDTOs;
 using EntityLayer.Concrete;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
-using TraversalCoreProject.Models; // Bunu da kaldırabilirsin eğer Models namespace yoksa
+using TraversalCoreProject.CQRS.Handlers.DestinationHandlers;
+using TraversalCoreProject.Models; // Bunu da kaldırabilirsin eğer Models namespace yoksa var
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +26,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 builder.Logging.AddDebug();
 
 // 🔹 DbContext
-builder.Services.AddDbContext<Context>();
+builder.Services.AddDbContext<Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 🔹 Identity
 builder.Services.AddIdentity<AppUser, AppRole>()
@@ -32,20 +36,32 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 
 // 🔹 GenericRepository DI
 builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
-
 builder.Services.AddHttpClient();
+
 // 🔹 Business & DataAccess bağımlılıkları
 builder.Services.ContainerDependencies();
 
 // 🔹 AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
-
 builder.Services.CustomerValidator();
 
 // 🔹 MVC + global authorize policy
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddScoped<GetAllDestinationQueryHandler>();
+builder.Services.AddScoped<GetDestinationByIDQueryHandler>();
+builder.Services.AddScoped<CreateDestinationCommandHandler>();
+builder.Services.AddScoped<RemoveDestinationCommandHandler>();
+builder.Services.AddScoped<UpdateDestinationCommandHandler>();
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+
+builder.Services.AddScoped<GetAllDestinationQueryHandler>();
 
 builder.Services.AddMvc(cfg =>
 {
@@ -59,11 +75,9 @@ builder.Services.AddMvc(cfg =>
 builder.Services.ConfigureApplicationCookie(opt =>
 {
     opt.AccessDeniedPath = "/Login/AccessDenied";
-
     opt.Events.OnRedirectToLogin = context =>
     {
         var path = context.Request.Path;
-
         if (path.StartsWithSegments("/Admin"))
         {
             context.Response.Redirect("/Admin/Login/Index");
@@ -76,7 +90,6 @@ builder.Services.ConfigureApplicationCookie(opt =>
         {
             context.Response.Redirect("/Login/Index");
         }
-
         return Task.CompletedTask;
     };
 });
@@ -99,10 +112,11 @@ else
 }
 
 app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -111,6 +125,7 @@ var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[1])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
+
 app.UseRequestLocalization(localizationOptions);
 
 // 🔹 Route tanımları
