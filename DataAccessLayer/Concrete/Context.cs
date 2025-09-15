@@ -10,10 +10,6 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-       
-        public Context() : base() { }
-        
-
         public DbSet<About> Abouts { get; set; }
         public DbSet<About2> Abouts2 { get; set; }
         public DbSet<Contact> Contacts { get; set; }
@@ -29,7 +25,6 @@ namespace DataAccessLayer.Concrete
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Account> Accounts { get; set; }
-
     }
+
 }
- 

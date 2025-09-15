@@ -10,10 +10,11 @@ namespace TraversalCoreProject.Controllers
     public class ExcelController : Controller
     {
         private readonly IExcelService _excelService;
-
-        public ExcelController(IExcelService excelService)
+        private readonly Context _context;
+        public ExcelController(IExcelService excelService, Context context)
         {
             _excelService = excelService;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -24,9 +25,8 @@ namespace TraversalCoreProject.Controllers
         public List<DestinationModel> DestinationList()
         {
             List<DestinationModel> destinationModels = new List<DestinationModel>();
-            using (var c = new Context())
-            {
-                destinationModels = c.Destinations.Select(x => new DestinationModel
+            
+                destinationModels = _context.Destinations.Select(x => new DestinationModel
                 {
                     City = x.City,
                     DayNight = x.DayNight,
@@ -34,7 +34,7 @@ namespace TraversalCoreProject.Controllers
                     Capacity = x.Capacity
                 }).ToList();
 
-            }
+            
             return destinationModels;
         }
         public IActionResult StaticExcelReport()

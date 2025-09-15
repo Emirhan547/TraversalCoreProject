@@ -19,7 +19,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         public IActionResult Index(MailRequest mailRequest)
         {
             MimeMessage mimeMessage = new MimeMessage();
-            MailboxAddress mailboxAddressFrom = new MailboxAddress ("Admin","emirhanhacioglu@gmail.com");
+            MailboxAddress mailboxAddressFrom = new MailboxAddress ("Admin","emirhanhacioglu372@gmail.com");
             mimeMessage.From.Add(mailboxAddressFrom);
             MailboxAddress  mailboxAddressTo = new MailboxAddress("User",mailRequest.ReceiverMail);
             mimeMessage.To.Add(mailboxAddressTo);
@@ -29,7 +29,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             mimeMessage.Subject = mailRequest.Subject;
             SmtpClient client = new SmtpClient();
             client.Connect("smtp.gmail.com", 587, false);
-         client.Authenticate("emirhanhacioglu@gmail.com", "Emirhan1907");
+         client.Authenticate("emirhanhacioglu372@gmail.com", "");
             client.Send(mimeMessage);
             client.Disconnect(true);
 

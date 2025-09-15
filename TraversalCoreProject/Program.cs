@@ -1,11 +1,6 @@
 ﻿using BusinessLayer.Container;
-using BusinessLayer.ValidationRules;
-using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DataAccessLayer.Repository;
-using DTOLayer.DTOs.AnnouncementDTOs;
 using EntityLayer.Concrete;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,94 +8,90 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Reflection;
 using TraversalCoreProject.CQRS.Handlers.DestinationHandlers;
-using TraversalCoreProject.Models; // Bunu da kaldırabilirsin eğer Models namespace yoksa var
+using TraversalCoreProject.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Logging
-builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(LogLevel.Debug);
-builder.Logging.AddDebug();
+// CONFIGURATION
+var configuration = builder.Configuration;
+var services = builder.Services;
 
-// 🔹 DbContext
-builder.Services.AddDbContext<Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// SERVICES
+services.AddScoped<GetAllDestinationQueryHandler>();
+services.AddScoped<GetDestinationByIDQueryHandler>();
+services.AddScoped<CreateDestinationCommandHandler>();
+services.AddScoped<RemoveDestinationCommandHandler>();
+services.AddScoped<UpdateDestinationCommandHandler>();
 
-// 🔹 Identity
-builder.Services.AddIdentity<AppUser, AppRole>()
-    .AddEntityFrameworkStores<Context>()
-    .AddErrorDescriber<CustomIdentityValidator>()
-    .AddDefaultTokenProviders();
-
-// 🔹 GenericRepository DI
-builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
-builder.Services.AddHttpClient();
-
-// 🔹 Business & DataAccess bağımlılıkları
-builder.Services.ContainerDependencies();
-
-// 🔹 AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.CustomerValidator();
-
-// 🔹 MVC + global authorize policy
-builder.Services.AddControllersWithViews();
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
-
-builder.Services.AddScoped<GetAllDestinationQueryHandler>();
-builder.Services.AddScoped<GetDestinationByIDQueryHandler>();
-builder.Services.AddScoped<CreateDestinationCommandHandler>();
-builder.Services.AddScoped<RemoveDestinationCommandHandler>();
-builder.Services.AddScoped<UpdateDestinationCommandHandler>();
-
-builder.Services.AddMediatR(cfg =>
+services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 });
 
-builder.Services.AddScoped<GetAllDestinationQueryHandler>();
+services.AddLogging(x =>
+{
+    x.ClearProviders();
+    x.SetMinimumLevel(LogLevel.Debug);
+    x.AddDebug();
+});
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+services.AddDbContext<Context>(options=>
+options.UseSqlServer(connectionString));
 
-builder.Services.AddMvc(cfg =>
+services.AddIdentity<AppUser, AppRole>()
+    .AddEntityFrameworkStores<Context>()
+    .AddErrorDescriber<CustomIdentityValidator>()
+    .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);
+    
+
+services.AddHttpClient();
+
+services.ContainerDependencies();
+
+services.AddAutoMapper(typeof(Program));
+
+services.CustomerValidator();
+
+services.AddControllersWithViews();
+services.AddFluentValidationAutoValidation();
+services.AddFluentValidationClientsideAdapters();
+
+
+services.AddMvc(config =>
 {
     var policy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
-    cfg.Filters.Add(new AuthorizeFilter(policy));
+    config.Filters.Add(new AuthorizeFilter(policy));
 });
 
-// 🔹 Cookie ayarları
-builder.Services.ConfigureApplicationCookie(opt =>
+services.AddLocalization(opt =>
 {
-    opt.AccessDeniedPath = "/Login/AccessDenied";
-    opt.Events.OnRedirectToLogin = context =>
-    {
-        var path = context.Request.Path;
-        if (path.StartsWithSegments("/Admin"))
-        {
-            context.Response.Redirect("/Admin/Login/Index");
-        }
-        else if (path.StartsWithSegments("/Member"))
-        {
-            context.Response.Redirect("/Member/Login/Index");
-        }
-        else
-        {
-            context.Response.Redirect("/Login/Index");
-        }
-        return Task.CompletedTask;
-    };
+    opt.ResourcesPath = "Resources";
 });
 
+services.AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
+services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login/SignIn/";
+});
+
+// BUILD
 var app = builder.Build();
 
-// 🔹 Middleware pipeline
+// LOGGER
 var path = Directory.GetCurrentDirectory();
 var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
 loggerFactory.AddFile($"{path}\\Logs\\Log1.txt");
 
+// MIDDLEWARE
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -112,29 +103,29 @@ else
 }
 
 app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
-
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
 
-var supportedCultures = new[] { "en", "fr", "es", "gr", "tr", "de" };
+var suppertedCultures = new[] { "en", "fr", "es", "tr", "de" };
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[1])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
+    .SetDefaultCulture(suppertedCultures[1])
+    .AddSupportedCultures(suppertedCultures)
+    .AddSupportedUICultures(suppertedCultures);
 
 app.UseRequestLocalization(localizationOptions);
 
-// 🔹 Route tanımları
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();

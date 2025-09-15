@@ -12,6 +12,13 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfContactUsDal : GenericRepository<ContactUs>, IContactUsDal
     {
+        private readonly Context _context;
+
+        public EfContactUsDal(Context context): base(context) 
+        {
+            _context = context;
+        }
+
         public void ContactUsStatusChangeToFalse(int id)
         {
             throw new NotImplementedException();
@@ -19,20 +26,18 @@ namespace DataAccessLayer.EntityFramework
 
         public List<ContactUs> GetListContactUsByFalse()
         {
-            using(var context = new Context())
-            {
-                var values= context.ContactUses.Where(x => x.MessageStatus == false).ToList();
+           
+                var values= _context.ContactUses.Where(x => x.MessageStatus == false).ToList();
                 return values;
-            }
+            
         }
 
         public List<ContactUs> GetListContactUsByTrue()
         {
-            using (var context = new Context())
-            {
-                var values = context.ContactUses.Where(x => x.MessageStatus == true).ToList();
+            
+                var values = _context.ContactUses.Where(x => x.MessageStatus == true).ToList();
                 return values;
-            }
+            
         }
     }
 }
