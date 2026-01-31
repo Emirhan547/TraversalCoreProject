@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ValidationRules.AnnouncementValidationRules
 {
-    public class AnnouncementUpdateValidator : AbstractValidator<AnnouncementUpdateDto>
+    public class AnnouncementUpdateValidator : AbstractValidator<UpdateAnnouncementDto>
     {
         public AnnouncementUpdateValidator()
         {

@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.SubAboutDtos;
 using EntityLayer.Concrete;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,36 +14,47 @@ namespace BusinessLayer.Concrete
 {
     public class SubAboutManager: ISubAboutService
     {
-        ISubAboutDal _subAboutDal;
+        private readonly ISubAboutDal _subAboutDal;
+        private readonly IUowDal _uowDal;
 
-        public SubAboutManager(ISubAboutDal subAboutDal)
+        public SubAboutManager(IUowDal uowDal, ISubAboutDal subAboutDal)
         {
+            _uowDal = uowDal;
             _subAboutDal = subAboutDal;
         }
 
-        public void TAdd(SubAbout t)
+        public async Task AddAsync(CreateSubAboutDto dto)
         {
-            throw new NotImplementedException();
+            var entity = dto.Adapt<SubAbout>();
+            await _subAboutDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TDelete(SubAbout t)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+           var values=await _subAboutDal.GetByIdAsync(id);
+           _subAboutDal.DeleteAsync(values);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public SubAbout TGetById(int id)
+        public async Task<ResultSubAboutDto?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var values = await _subAboutDal.GetByIdAsync(id);
+            return values?.Adapt<ResultSubAboutDto>();
         }
 
-        public List<SubAbout> TGetList()
+        public async Task<IReadOnlyList<ResultSubAboutDto>> GetListAsync()
         {
-            return _subAboutDal.GetList();
+            var values=await _subAboutDal.GetListAsync();
+            return values.Adapt<IReadOnlyList<ResultSubAboutDto>>();
         }
 
-        public void TUpdate(SubAbout t)
+        public async Task UpdateAsync(UpdateSubAboutDto dto)
         {
-            throw new NotImplementedException();
+            var values=await _subAboutDal.GetByIdAsync(dto.Id);
+            dto.Adapt(values);
+           _subAboutDal.UpdateAsync(values);
+            await _uowDal.SaveChangesAsync();
         }
     }
 }

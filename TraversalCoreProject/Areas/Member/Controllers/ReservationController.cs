@@ -52,13 +52,16 @@ public class ReservationController : Controller
             ViewBag.v =values;
             return View();
         }
-    [HttpPost]
-    public IActionResult NewReservation(Reservation p)
-    {
-            p.AppUserId = 1;
+        [HttpPost]
+        public async Task<IActionResult> NewReservation(Reservation p)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
+            p.AppUserId = user.Id; 
             p.Status = "Onay Bekliyor";
+            p.ReservationDate = DateTime.Now;
+
             _reservationService.TAdd(p);
             return RedirectToAction("MyCurrentReservation");
+        }
     }
-}
 }

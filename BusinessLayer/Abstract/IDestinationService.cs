@@ -1,15 +1,13 @@
-﻿using EntityLayer.Concrete;
-using System;
+﻿using DTOLayer.DTOs.DestinatonDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IDestinationService : IGenericService<Destination>
+    public interface IDestinationService
+        : IGenericService<ResultDestinationDto, CreateDestinationDto, UpdateDestinationDto>
     {
-        public Destination TGetDestinationWithGuide(int id);
-        public List<Destination> TGetLast4Destinations();
+        Task<ResultDestinationDto?> GetDestinationWithGuideAsync(int id);
+        Task<IReadOnlyList<ResultDestinationDto>> GetLast4DestinationsAsync();
     }
 }

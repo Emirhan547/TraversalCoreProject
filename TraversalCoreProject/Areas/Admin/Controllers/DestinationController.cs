@@ -19,7 +19,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var values =_destinationService.TGetList();
+            var values = _destinationService.TGetList();
             return View(values);
         }
         [HttpGet]
@@ -28,7 +28,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddDestination (Destination destination)
+        public IActionResult AddDestination(Destination destination)
         {
             _destinationService.TAdd(destination);
             return RedirectToAction("Index");

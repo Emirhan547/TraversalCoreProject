@@ -52,7 +52,7 @@ namespace BusinessLayer.Container
         }
         public static void CustomerValidator(this IServiceCollection services)
         {
-            services.AddTransient<IValidator<AnnouncementAddDto>, AnnouncementValidator>();
+            services.AddTransient<IValidator<CreateAnnouncementDto>, AnnouncementValidator>();
 
         }
     }

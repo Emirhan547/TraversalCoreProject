@@ -8,10 +8,10 @@ namespace TraversalCoreProject.Mapping.AutoMapperProfile
 {
     public class MapProfile : Profile
     {
-        protected MapProfile()
+        public MapProfile()
         {
-            CreateMap<AnnouncementAddDto, Announcement>();
-            CreateMap<Announcement, AnnouncementAddDto>();
+            CreateMap<CreateAnnouncementDto, Announcement>();
+            CreateMap<Announcement, CreateAnnouncementDto>();
 
  
             CreateMap<AppUserRegisterDTOs, AppUser>();
@@ -21,11 +21,11 @@ namespace TraversalCoreProject.Mapping.AutoMapperProfile
             CreateMap<AppUserLoginDTOs, AppUser>();
             CreateMap<AppUser, AppUserLoginDTOs>();
 
-            CreateMap<AnnouncementListDto, Announcement>();
-            CreateMap<Announcement, AnnouncementListDto>();
+            CreateMap<ResultAnnouncementDto, Announcement>();
+            CreateMap<Announcement, ResultAnnouncementDto>();
 
-            CreateMap<AnnouncementUpdateDto, Announcement>();
-            CreateMap<Announcement, AnnouncementUpdateDto>();
+            CreateMap<UpdateAnnouncementDto, Announcement>();
+            CreateMap<Announcement, UpdateAnnouncementDto>();
 
             CreateMap<SendMessageDto, ContactUs>().ReverseMap();
             

@@ -1,15 +1,12 @@
-﻿using EntityLayer.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DTOLayer.DTOs.GuideDtos;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IGuideService : IGenericService<Guide>
+    public interface IGuideService
+        : IGenericService<ResultGuideDto, CreateGuideDto, UpdateGuideDto>
     {
-        void TChangeToTrueByGuide(int id);
-        void TChangeToFalseByGuide(int id);
+        Task ChangeGuideStatusToTrueAsync(int id);
+        Task ChangeGuideStatusToFalseAsync(int id);
     }
 }

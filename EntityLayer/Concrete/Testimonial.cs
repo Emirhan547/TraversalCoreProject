@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Testimonial
+    public class Testimonial : BaseEntity
     {
-        [Key]
-        public int TestimonialId { get; set; }
         public string Client { get; set; }
         public string Comment { get; set; }
         public string ClientImage { get; set; }

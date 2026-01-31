@@ -1,61 +1,96 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.ContactUsDtos;
 using EntityLayer.Concrete;
-using System;
+using Mapster;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
     public class ContactUsManager : IContactUsService
     {
-        IContactUsDal _contactUsDal;
+        private readonly IContactUsDal _contactUsDal;
+        private readonly IUowDal _uowDal;
 
-        public ContactUsManager(IContactUsDal contactUsDal)
+        public ContactUsManager(IUowDal uowDal, IContactUsDal contactUsDal)
         {
+            _uowDal = uowDal;
             _contactUsDal = contactUsDal;
         }
 
-        public void TAdd(ContactUs t)
+        // -------------------- CREATE --------------------
+
+        public async Task AddAsync(CreateContactUsDto dto)
         {
-            _contactUsDal.Insert(t);
+            var entity = dto.Adapt<ContactUs>();
+            await _contactUsDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TContactUsStatusChangeToFalse(int id)
+        // -------------------- UPDATE --------------------
+
+        public async Task UpdateAsync(UpdateContactUsDto dto)
         {
-            throw new NotImplementedException();
+            var entity = await _contactUsDal.GetByIdAsync(dto.Id);
+            if (entity == null)
+                throw new KeyNotFoundException("ContactUs not found");
+
+            dto.Adapt(entity);
+             _contactUsDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TDelete(ContactUs t)
+        // -------------------- DELETE --------------------
+
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _contactUsDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("ContactUs not found");
+
+            _contactUsDal.DeleteAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public ContactUs TGetById(int id)
+        // -------------------- GET --------------------
+
+        public async Task<ResultContactUsDto?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _contactUsDal.GetByIdAsync(id);
+            return entity?.Adapt<ResultContactUsDto>();
         }
 
-        public List<ContactUs> TGetList()
+        public async Task<IReadOnlyList<ResultContactUsDto>> GetListAsync()
         {
-            return _contactUsDal.GetList();
+            var entities = await _contactUsDal.GetListAsync();
+            return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        public List<ContactUs> TGetListContactUsByFalse()
+        // -------------------- CUSTOM --------------------
+
+        public async Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync()
         {
-            return _contactUsDal.GetListContactUsByFalse();
+            var entities = await _contactUsDal.GetListContactUsByTrueAsync();
+            return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        public List<ContactUs> TGetListContactUsByTrue()
+        public async Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByFalseAsync()
         {
-           return _contactUsDal.GetListContactUsByTrue();
+            var entities = await _contactUsDal.GetListContactUsByFalseAsync();
+            return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        public void TUpdate(ContactUs t)
+        public async Task ContactUsStatusChangeToFalseAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _contactUsDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("ContactUs not found");
+
+            entity.MessageStatus = false;
+             _contactUsDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
     }
 }

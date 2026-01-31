@@ -1,60 +1,91 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.CommentsDtos;
 using EntityLayer.Concrete;
-using System;
+using Mapster;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
     public class CommentManager : ICommentService
     {
-        ICommentDal _commentDal;
+        private readonly ICommentDal _commentDal;
+        private readonly IUowDal _uowDal;
 
-        public CommentManager(ICommentDal commentDal)
+        public CommentManager(ICommentDal commentDal, IUowDal uowDal)
         {
             _commentDal = commentDal;
+            _uowDal = uowDal;
         }
 
-        public void TAdd(Comment t)
+        // -------------------- CREATE --------------------
+
+        public async Task AddAsync(CreateCommentDto dto)
         {
-            _commentDal.Insert(t);
+            var entity = dto.Adapt<Comment>();
+            await _commentDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TDelete(Comment t)
+        // -------------------- UPDATE --------------------
+
+        public async Task UpdateAsync(UpdateCommentDto dto)
         {
-            _commentDal.Delete(t);
+            var entity = await _commentDal.GetByIdAsync(dto.Id);
+            if (entity == null)
+                throw new KeyNotFoundException("Comment not found");
+
+            dto.Adapt(entity); // mevcut entity üstüne map
+             _commentDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public Comment TGetById(int id)
+        // -------------------- DELETE --------------------
+
+        public async Task DeleteAsync(int id)
         {
-            return _commentDal.GetById(id);
+            var entity = await _commentDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("Comment not found");
+
+             _commentDal.DeleteAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public List<Comment> TGetList()
+        // -------------------- GET --------------------
+
+        public async Task<ResultCommentDto?> GetByIdAsync(int id)
         {
-            return _commentDal.GetList();
-        }
-        public List<Comment> TGetDestinationById(int id)
-        {
-            return _commentDal.GetListByFilter(x => x.DestinationID == id);
+            var entity = await _commentDal.GetByIdAsync(id);
+            return entity?.Adapt<ResultCommentDto>();
         }
 
-        public void TUpdate(Comment t)
+        public async Task<IReadOnlyList<ResultCommentDto>> GetListAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _commentDal.GetListAsync();
+            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
         }
 
-        public List<Comment> TGetListCommentWithDestination()
+        // -------------------- CUSTOM QUERIES --------------------
+
+        public async Task<IReadOnlyList<ResultCommentDto>> GetByDestinationIdAsync(int destinationId)
         {
-            return _commentDal.GetListCommentWithDestination();
+            var entities = await _commentDal.GetByDestinationIdAsync(destinationId);
+            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
         }
 
-        public List<Comment> TGetListCommentWithDestinationAndUser(int id)
+        public async Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAsync()
         {
-           return _commentDal.GetListCommentWithDestinationAndUser(id);
+            var entities = await _commentDal.GetCommentsWithDestinationAsync();
+            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
+        }
+
+        public async Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAndUserAsync(int userId)
+        {
+            var entities = await _commentDal.GetCommentsWithDestinationAndUserAsync(userId);
+            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
         }
     }
 }

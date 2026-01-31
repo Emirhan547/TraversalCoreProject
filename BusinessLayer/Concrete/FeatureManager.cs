@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.FeatureDtos;
 using EntityLayer.Concrete;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,36 +14,47 @@ namespace BusinessLayer.Concrete
 {
     public class FeatureManager:IFeatureService
     {
-        IFeatureDal _featureDal;
+       private readonly IFeatureDal _featureDal;
+        private readonly IUowDal _uowDal;
 
-        public FeatureManager(IFeatureDal featureDal)
+        public FeatureManager(IUowDal uowDal, IFeatureDal featureDal)
         {
+            _uowDal = uowDal;
             _featureDal = featureDal;
         }
 
-        public void TAdd(Feature t)
+        public async Task AddAsync(CreateFeatureDto dto)
         {
-            throw new NotImplementedException();
+            var entity = dto.Adapt<Feature>();
+            await _featureDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TDelete(Feature t)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+           var values=await _featureDal.GetByIdAsync(id);
+            _featureDal.DeleteAsync(values);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public Feature TGetById(int id)
+        public async Task<ResultFeatureDto?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var values = await _featureDal.GetByIdAsync(id);
+            return  _featureDal.Adapt<ResultFeatureDto>();
         }
 
-        public List<Feature> TGetList()
+        public async Task<IReadOnlyList<ResultFeatureDto>> GetListAsync()
         {
-            return _featureDal.GetList();
+            var values=await _featureDal.GetListAsync();
+            return values.Adapt<IReadOnlyList<ResultFeatureDto>>();
         }
 
-        public void TUpdate(Feature t)
+        public async Task UpdateAsync(UpdateFeatureDto dto)
         {
-            throw new NotImplementedException();
+           var values=await _featureDal.GetByIdAsync(dto.Id);
+            dto.Adapt(values);
+            _featureDal.UpdateAsync(values);
+            await _uowDal.SaveChangesAsync();
         }
     }
 }

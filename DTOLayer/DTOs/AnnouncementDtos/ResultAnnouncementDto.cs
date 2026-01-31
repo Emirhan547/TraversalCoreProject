@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DTOLayer.DTOs.AnnouncementDTOs
 {
-    public class AnnouncementUpdateDto
+    public class ResultAnnouncementDto
     {
-        public int AnnouncementID { get; set; }
+        public int Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public bool IsDeleted { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime Date { get; set; }

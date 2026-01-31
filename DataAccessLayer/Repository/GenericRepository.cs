@@ -1,5 +1,7 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
+using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace DataAccessLayer.Repository
 {
-    public class GenericRepository<T> : IGenericDal<T> where T : class
+    public class GenericRepository<T> : IGenericDal<T> where T : BaseEntity
     {
         private readonly Context _context;
 
@@ -16,37 +18,34 @@ namespace DataAccessLayer.Repository
             _context = context;
         }
 
-        public void Delete(T t)
+        public async Task AddAsync(T entity)
         {
-            _context.Remove(t);
-            _context.SaveChanges();
+           await _context.Set<T>().AddAsync(entity);
         }
 
-        public T GetById(int id)
+        public void DeleteAsync(T entity)
         {
-            return _context.Set<T>().Find(id);
+           _context.Set<T>().Remove(entity);
         }
 
-        public List<T> GetList()
+        public async Task<T?> GetByIdAsync(int id)
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public List<T> GetListByFilter(Expression<Func<T, bool>> filter)
+        public async Task<IReadOnlyList<T>> GetListAsync()
         {
-            return _context.Set<T>().Where(filter).ToList();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public void Insert(T t)
+        public async Task<IReadOnlyList<T>> GetListByFilterAsync(Expression<Func<T, bool>> filter)
         {
-            _context.Add(t);
-            _context.SaveChanges();
+            return await _context.Set<T>().Where(filter).ToListAsync();
         }
 
-        public void Update(T t)
+        public void UpdateAsync(T entity)
         {
-            _context.Update(t);
-            _context.SaveChanges();
+            _context.Set<T>().Update(entity);
         }
     }
 }

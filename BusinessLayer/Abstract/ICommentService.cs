@@ -1,16 +1,14 @@
-﻿using EntityLayer.Concrete;
-using System;
+﻿using DTOLayer.DTOs.CommentsDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface ICommentService:IGenericService<Comment>
+    public interface ICommentService
+        : IGenericService<ResultCommentDto, CreateCommentDto, UpdateCommentDto>
     {
-        List<Comment> TGetDestinationById(int id);
-        List<Comment> TGetListCommentWithDestination();
-        List<Comment> TGetListCommentWithDestinationAndUser(int id);
+        Task<IReadOnlyList<ResultCommentDto>> GetByDestinationIdAsync(int destinationId);
+        Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAsync();
+        Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAndUserAsync(int userId);
     }
 }

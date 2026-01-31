@@ -1,9 +1,5 @@
 ﻿using DataAccessLayer.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccessLayer.UnitOfWork
 {
@@ -16,9 +12,9 @@ namespace DataAccessLayer.UnitOfWork
             _context = context;
         }
 
-        public void Save()
+        public async Task<bool> SaveChangesAsync()
         {
-           _context.SaveChanges();
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

@@ -30,8 +30,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             valueSender.Balance -= model.Amount;
             valueReceiver.Balance += model.Amount;
             List<Account> modifiedAccounts= new List<Account>
-            { valueSender,
-            valueReceiver 
+            {
+            valueSender,
+            valueReceiver,
             };
             _accountService.TMultiUpdate(modifiedAccounts);
             return View();

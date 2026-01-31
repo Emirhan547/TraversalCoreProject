@@ -1,4 +1,5 @@
-﻿using EntityLayer.Concrete;
+﻿using DTOLayer.DTOs.AnnouncementDTOs;
+using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IAnnouncementService:IGenericService<Announcement>
+    public interface IAnnouncementService:IGenericService<ResultAnnouncementDto,CreateAnnouncementDto,UpdateAnnouncementDto>
     {
     }
 }

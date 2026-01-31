@@ -1,15 +1,13 @@
 ﻿using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface ICommentDal:IGenericDal<Comment>
+    public interface ICommentDal : IGenericDal<Comment>
     {
-        public List<Comment> GetListCommentWithDestination();
-        public List<Comment> GetListCommentWithDestinationAndUser(int id);
+        Task<IReadOnlyList<Comment>> GetByDestinationIdAsync(int destinationId);
+        Task<IReadOnlyList<Comment>> GetCommentsWithDestinationAsync();
+        Task<IReadOnlyList<Comment>> GetCommentsWithDestinationAndUserAsync(int userId);
     }
 }

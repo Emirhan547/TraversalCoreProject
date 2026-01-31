@@ -9,12 +9,12 @@ namespace DataAccessLayer.Abstract
 {
     public interface IGenericDal<T>
     {
-        void Insert(T t);
-        void Update(T t);
-        void Delete(T t);
-        List<T> GetList();
-        T GetById(int id);
-        List<T> GetListByFilter(Expression<Func<T,bool>>filter);
+        Task AddAsync(T entity);
+        void UpdateAsync(T entity);
+        void DeleteAsync(T entity);
+        Task<IReadOnlyList<T>> GetListAsync();
+        Task<T?> GetByIdAsync(int id);
+        Task<IReadOnlyList<T>> GetListByFilterAsync(Expression<Func<T, bool>> filter);
 
     }
 }

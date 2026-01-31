@@ -23,7 +23,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var values = _mapper.Map<List<AnnouncementListDto>>(_announcementService.TGetList());
+            var values = _mapper.Map<List<ResultAnnouncementDto>>(_announcementService.TGetList());
             return View(values);
         }
         [HttpGet]
@@ -33,7 +33,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddAnnouncement(AnnouncementAddDto model)
+        public IActionResult AddAnnouncement(CreateAnnouncementDto model)
         {
             if (ModelState.IsValid)
             {
@@ -56,12 +56,12 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UpdateAnnouncement(int id)
         {
-            var values = _mapper.Map<AnnouncementUpdateDto>(_announcementService.TGetById(id));
+            var values = _mapper.Map<UpdateAnnouncementDto>(_announcementService.TGetById(id));
 
             return View(values);
         }
         [HttpPost]
-        public IActionResult UpdateAnnouncement(AnnouncementUpdateDto model)
+        public IActionResult UpdateAnnouncement(UpdateAnnouncementDto model)
         {
             if (ModelState.IsValid)
             {

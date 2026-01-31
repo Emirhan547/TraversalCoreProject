@@ -2,10 +2,9 @@
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repository;
 using EntityLayer.Concrete;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.EntityFramework
@@ -14,30 +13,23 @@ namespace DataAccessLayer.EntityFramework
     {
         private readonly Context _context;
 
-        public EfContactUsDal(Context context): base(context) 
+        public EfContactUsDal(Context context) : base(context)
         {
             _context = context;
         }
 
-        public void ContactUsStatusChangeToFalse(int id)
+        public async Task<IReadOnlyList<ContactUs>> GetListContactUsByTrueAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ContactUses
+                .Where(x => x.MessageStatus == true)
+                .ToListAsync();
         }
 
-        public List<ContactUs> GetListContactUsByFalse()
+        public async Task<IReadOnlyList<ContactUs>> GetListContactUsByFalseAsync()
         {
-           
-                var values= _context.ContactUses.Where(x => x.MessageStatus == false).ToList();
-                return values;
-            
-        }
-
-        public List<ContactUs> GetListContactUsByTrue()
-        {
-            
-                var values = _context.ContactUses.Where(x => x.MessageStatus == true).ToList();
-                return values;
-            
+            return await _context.ContactUses
+                .Where(x => x.MessageStatus == false)
+                .ToListAsync();
         }
     }
 }

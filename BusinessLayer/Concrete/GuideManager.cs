@@ -1,56 +1,92 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.GuideDtos;
 using EntityLayer.Concrete;
-using System;
+using Mapster;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
     public class GuideManager : IGuideService
     {
-        IGuideDal _guideDal;
+        private readonly IGuideDal _guideDal;
+        private readonly IUowDal _uowDal;
 
-        public GuideManager(IGuideDal guideDal)
+        public GuideManager(IUowDal uowDal, IGuideDal guideDal)
         {
+            _uowDal = uowDal;
             _guideDal = guideDal;
         }
 
-        public void TAdd(Guide t)
+       
+
+        public async Task AddAsync(CreateGuideDto dto)
         {
-           _guideDal.Insert(t);
+            var entity = dto.Adapt<Guide>();
+            await _guideDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TChangeToFalseByGuide(int id)
+      
+
+        public async Task UpdateAsync(UpdateGuideDto dto)
         {
-            _guideDal.ChangeToFalseByGuide(id);
+            var entity = await _guideDal.GetByIdAsync(dto.Id);
+            if (entity == null)
+                throw new KeyNotFoundException("Guide not found");
+
+            dto.Adapt(entity);
+             _guideDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
+        }
+   
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _guideDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("Guide not found");
+
+             _guideDal.DeleteAsync(entity);
+            await _uowDal.SaveChangesAsync();
+        }
+        
+
+        public async Task<ResultGuideDto?> GetByIdAsync(int id)
+        {
+            var entity = await _guideDal.GetByIdAsync(id);
+            return entity?.Adapt<ResultGuideDto>();
         }
 
-        public void TChangeToTrueByGuide(int id)
+        public async Task<IReadOnlyList<ResultGuideDto>> GetListAsync()
         {
-            _guideDal.ChangeToTrueByGuide(id);
+            var entities = await _guideDal.GetListAsync();
+            return entities.Adapt<IReadOnlyList<ResultGuideDto>>();
         }
 
-        public void TDelete(Guide t)
+       
+
+        public async Task ChangeGuideStatusToTrueAsync(int id)
         {
-            _guideDal.Delete(t);
+            var entity = await _guideDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("Guide not found");
+
+            entity.Status = true;
+             _guideDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public Guide TGetById(int id)
+        public async Task ChangeGuideStatusToFalseAsync(int id)
         {
-            return _guideDal.GetById(id);
-        }
+            var entity = await _guideDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("Guide not found");
 
-        public List<Guide> TGetList()
-        {
-            return _guideDal.GetList();
-        }
-
-        public void TUpdate(Guide t)
-        {
-            _guideDal.Update(t);
+            entity.Status = false;
+             _guideDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
     }
 }

@@ -1,62 +1,84 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.ReservationDtos;
 using EntityLayer.Concrete;
-using System;
+using Mapster;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
     public class ReservationManager : IReservationService
     {
-        IReservationDal _reservationDal;
+        private readonly IReservationDal _reservationDal;
+        private readonly IUowDal _uowDal;
 
-        public ReservationManager(IReservationDal reservationDal)
+        public ReservationManager(IUowDal uowDal, IReservationDal reservationDal)
         {
+            _uowDal = uowDal;
             _reservationDal = reservationDal;
         }
 
-        public List<Reservation> GetListWithReservationByAccepted(int id)
+
+        public async Task AddAsync(CreateReservationDto dto)
         {
-            return _reservationDal.GetListWithReservationByAccepted(id);
+            var entity = dto.Adapt<Reservation>();
+            await _reservationDal.AddAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public List<Reservation> GetListWithReservationByPrevious(int id)
+
+        public async Task UpdateAsync(UpdateReservationDto dto)
         {
-            return _reservationDal.GetListWithReservationByPrevious(id);
+            var entity = await _reservationDal.GetByIdAsync(dto.Id);
+            if (entity == null)
+                throw new KeyNotFoundException("Reservation not found");
+
+            dto.Adapt(entity);
+             _reservationDal.UpdateAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public List<Reservation> GetListWithReservationByWaitApproval(int id)
+        public async Task DeleteAsync(int id)
         {
-            return _reservationDal.GetListWithReservationByWaitApproval(id);
-          
+            var entity = await _reservationDal.GetByIdAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException("Reservation not found");
+
+             _reservationDal.DeleteAsync(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TAdd(Reservation t)
+        public async Task<ResultReservationDto?> GetByIdAsync(int id)
         {
-            _reservationDal.Insert(t);
+            var entity = await _reservationDal.GetByIdAsync(id);
+            return entity?.Adapt<ResultReservationDto>();
         }
 
-        public void TDelete(Reservation t)
+        public async Task<IReadOnlyList<ResultReservationDto>> GetListAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _reservationDal.GetListAsync();
+            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
         }
 
-        public Reservation TGetById(int id)
+
+        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByWaitApprovalAsync(int userId)
         {
-            throw new NotImplementedException();
+            var entities = await _reservationDal.GetListWithReservationByWaitApprovalAsync(userId);
+            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
         }
 
-        public List<Reservation> TGetList()
+        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByAcceptedAsync(int userId)
         {
-            throw new NotImplementedException();
+            var entities = await _reservationDal.GetListWithReservationByAcceptedAsync(userId);
+            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
         }
 
-        public void TUpdate(Reservation t)
+        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByPreviousAsync(int userId)
         {
-            throw new NotImplementedException();
+            var entities = await _reservationDal.GetListWithReservationByPreviousAsync(userId);
+            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
         }
     }
 }

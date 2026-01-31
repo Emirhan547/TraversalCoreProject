@@ -3,11 +3,8 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.Repository;
 using EntityLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.EntityFramework
@@ -16,30 +13,33 @@ namespace DataAccessLayer.EntityFramework
     {
         private readonly Context _context;
 
-        public EfReservationDal(Context context): base(context) 
+        public EfReservationDal(Context context) : base(context)
         {
             _context = context;
         }
 
-        public List<Reservation> GetListWithReservationByAccepted(int id)
+        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByWaitApprovalAsync(int userId)
         {
-           
-                return _context.Reservations.Include(x => x.Destination).Where(x => x.Status == "Onaylandı" && x.AppUserId == id).ToList();
-            
+            return await _context.Reservations
+                .Include(x => x.Destination)
+                .Where(x => x.Status == "Onay Bekliyor" && x.AppUserId == userId)
+                .ToListAsync();
         }
 
-        public List<Reservation> GetListWithReservationByPrevious(int id)
+        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByAcceptedAsync(int userId)
         {
-            
-                return _context.Reservations.Include(x => x.Destination).Where(x => x.Status == "Geçmiş Rezervasyon" && x.AppUserId == id).ToList();
-            
+            return await _context.Reservations
+                .Include(x => x.Destination)
+                .Where(x => x.Status == "Onaylandı" && x.AppUserId == userId)
+                .ToListAsync();
         }
 
-        public List<Reservation> GetListWithReservationByWaitApproval(int id)
+        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByPreviousAsync(int userId)
         {
-           
-                return _context.Reservations.Include(x => x.Destination).Where(x => x.Status == "Onay Bekliyor" && x.AppUserId==id).ToList();
-            
+            return await _context.Reservations
+                .Include(x => x.Destination)
+                .Where(x => x.Status == "Geçmiş Rezervasyon" && x.AppUserId == userId)
+                .ToListAsync();
         }
     }
 }

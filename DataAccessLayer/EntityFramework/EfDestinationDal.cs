@@ -3,10 +3,8 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.Repository;
 using EntityLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.EntityFramework
@@ -15,25 +13,24 @@ namespace DataAccessLayer.EntityFramework
     {
         private readonly Context _context;
 
-        public EfDestinationDal(Context context): base(context) 
+        public EfDestinationDal(Context context) : base(context)
         {
             _context = context;
         }
 
-        public Destination GetDestinationWithGuide(int id)
+        public async Task<Destination?> GetDestinationWithGuideAsync(int id)
         {
-           
-                return _context.Destinations.Where(x => x.DestinationID==id).Include(x => x.Guide).FirstOrDefault();
-            
-            
+            return await _context.Destinations
+                .Include(x => x.Guide)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public List<Destination> GetLast4Destinations()
+        public async Task<IReadOnlyList<Destination>> GetLast4DestinationsAsync()
         {
-           
-                var values=_context.Destinations.Take(4).OrderByDescending(x => x.DestinationID).ToList();
-                return values;
-            
+            return await _context.Destinations
+                .OrderByDescending(x => x.Id)
+                .Take(4)
+                .ToListAsync();
         }
     }
 }

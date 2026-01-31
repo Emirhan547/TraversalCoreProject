@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Account
+    public class Account : BaseEntity
     {
-        public int AccountId { get; set; }
         public string Name { get; set; }
         public decimal Balance { get; set; }
 

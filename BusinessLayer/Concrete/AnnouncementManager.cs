@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.AnnouncementDTOs;
 using EntityLayer.Concrete;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,35 +15,53 @@ namespace BusinessLayer.Concrete
     public class AnnouncementManager : IAnnouncementService
     {
         private readonly IAnnouncementDal _announcementDal;
-
-        public AnnouncementManager(IAnnouncementDal announcementDal)
+        private readonly IUowDal _uowDal;
+        public AnnouncementManager(IAnnouncementDal announcementDal, IUowDal uowDal)
         {
             _announcementDal = announcementDal;
+            _uowDal = uowDal;
         }
 
-        public void TAdd(Announcement t)
+        public async Task AddAsync(CreateAnnouncementDto dto)
         {
-           _announcementDal.Insert(t);
+            var values = dto.Adapt<Announcement>();
+           await _announcementDal.AddAsync(values);
+           await _uowDal.SaveChangesAsync();
+
         }
 
-        public void TDelete(Announcement t)
+        public async Task DeleteAsync(int id)
         {
-            _announcementDal.Delete(t);
+            var values = await _announcementDal.GetByIdAsync(id);
+
+            _announcementDal.DeleteAsync(values);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public Announcement TGetById(int id)
+        public async Task<ResultAnnouncementDto?> GetByIdAsync(int id)
         {
-            return _announcementDal.GetById(id);
+            var values = await _announcementDal.GetByIdAsync(id);
+            
+            return values?.Adapt<ResultAnnouncementDto?>();
         }
 
-        public List<Announcement> TGetList()
+        public async Task<IReadOnlyList<ResultAnnouncementDto>> GetListAsync()
         {
-            return _announcementDal.GetList();
+            var values=await _announcementDal.GetListAsync();
+            return values.Adapt<IReadOnlyList<ResultAnnouncementDto>>();
+
+
         }
 
-        public void TUpdate(Announcement t)
+        public async Task UpdateAsync(UpdateAnnouncementDto dto)
         {
-            _announcementDal.Update(t);
+            var values=await _announcementDal.GetByIdAsync(dto.Id);
+            
+            dto.Adapt(values);
+            _announcementDal.Adapt(values);
+            await _uowDal.SaveChangesAsync();
+            
+            
         }
     }
 }

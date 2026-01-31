@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Contact
+    public class Contact : BaseEntity
     {
-        [Key]
-        public int ContactId { get; set; }
 
         public string Description { get; set; }
         public string Mail { get; set; }

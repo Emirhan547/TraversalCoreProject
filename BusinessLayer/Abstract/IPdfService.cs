@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public class IPdfService
+    public interface IPdfService
     {
+        byte[] GeneratePdfReport<T>(List<T> data) where T : class;
+        byte[] GenerateDestinationPdfReport();
+        Task<byte[]> GenerateReservationPdfReportAsync(int userId);
     }
 }

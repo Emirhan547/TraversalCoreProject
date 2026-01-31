@@ -1,16 +1,14 @@
-﻿using EntityLayer.Concrete;
-using System;
+﻿using DTOLayer.DTOs.ReservationDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IReservationService:IGenericService<Reservation>
+    public interface IReservationService
+        : IGenericService<ResultReservationDto, CreateReservationDto, UpdateReservationDto>
     {
-        List<Reservation> GetListWithReservationByWaitApproval(int id);
-        List<Reservation> GetListWithReservationByAccepted(int id);
-        List<Reservation> GetListWithReservationByPrevious(int id);
+        Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByWaitApprovalAsync(int userId);
+        Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByAcceptedAsync(int userId);
+        Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByPreviousAsync(int userId);
     }
 }

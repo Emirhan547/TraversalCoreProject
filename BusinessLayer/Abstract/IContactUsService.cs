@@ -1,16 +1,14 @@
-﻿using EntityLayer.Concrete;
-using System;
+﻿using DTOLayer.DTOs.ContactUsDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IContactUsService:IGenericService<ContactUs>
+    public interface IContactUsService
+        : IGenericService<ResultContactUsDto, CreateContactUsDto, UpdateContactUsDto>
     {
-        List<ContactUs> TGetListContactUsByTrue();
-        List<ContactUs> TGetListContactUsByFalse();
-        void TContactUsStatusChangeToFalse(int id);
+        Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync();
+        Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByFalseAsync();
+        Task ContactUsStatusChangeToFalseAsync(int id);
     }
 }

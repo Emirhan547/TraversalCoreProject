@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Feature
+    public class Feature : BaseEntity
     {
-        [Key]
-        public int FeatureId { get; set; }
         public bool Title { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Image { get; set; }
-        public bool Status { get; set; }
+        public string? Image { get; set; }
+        public bool? Status { get; set; }
 
     }
 }

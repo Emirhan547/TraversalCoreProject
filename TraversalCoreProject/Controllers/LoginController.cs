@@ -62,17 +62,14 @@ namespace TraversalCoreProje.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(p.username, p.password, false, true);
+                var result = await _signInManager.PasswordSignInAsync(p.UserName, p.Password, false, true);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Profile", new { area = "Member" });
                 }
-                else
-                {
-                    return RedirectToAction("SignIn", "Login");
-                }
+                ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı!");
             }
-            return View();
+            return View(p);
         }
     }
 }
