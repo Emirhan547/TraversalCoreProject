@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using DTOLayer.DTOs.DestinatonDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -17,9 +19,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             _destinationService = destinationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _destinationService.TGetList();
+            var values =await _destinationService.GetListAsync();
             return View(values);
         }
         [HttpGet]
@@ -28,28 +30,50 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddDestination(Destination destination)
+        public async Task<IActionResult> AddDestination(CreateDestinationDto destination)
         {
-            _destinationService.TAdd(destination);
+           await _destinationService.AddAsync(destination);
             return RedirectToAction("Index");
         }
-        public IActionResult DeleteDestination(int id)
+        public async Task<IActionResult> DeleteDestination(int id)
         {
-            var values = _destinationService.TGetById(id);
-            _destinationService.TDelete(values);
+           await _destinationService.DeleteAsync(id);
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult UpdateDestination(int id)
+        public async Task<IActionResult> UpdateDestination(int id)
         {
-            var values = _destinationService.TGetById(id);
-            return View(values);
+            var values = await _destinationService.GetByIdAsync(id);
+            if (values is null)
+            {
+                return NotFound();
+            }
+
+            var model = new UpdateDestinationDto
+            {
+                Id = values.Id,
+                City = values.City,
+                DayNight = values.DayNight,
+                Price = values.Price,
+                Image = values.Image,
+                Description = values.Description,
+                Capacity = values.Capacity,
+                Status = values.Status,
+                CoverImage = values.CoverImage,
+                Details1 = values.Details1,
+                Details2 = values.Details2,
+                Image2 = values.Image2,
+                Date = values.Date,
+                GuideId = values.GuideId
+            };
+            return View(model);
 
         }
         [HttpPost]
-        public IActionResult UpdateDestination(Destination destination)
+        public async Task<IActionResult> UpdateDestination(UpdateDestinationDto destination)
         {
-            _destinationService.TUpdate(destination);
+
+          await _destinationService.UpdateAsync(destination);
             return RedirectToAction("Index");
 
         }

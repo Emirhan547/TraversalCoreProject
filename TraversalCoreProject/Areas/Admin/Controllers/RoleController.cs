@@ -1,6 +1,8 @@
 ﻿using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using TraversalCoreProject.Areas.Admin.Models;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
@@ -19,9 +21,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             _userManager = userManager;
         }
         [Route("Index")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _roleManager.Roles.ToList();
+            var values =await _roleManager.Roles.ToListAsync();
             return View(values);
         }
 
@@ -54,16 +56,16 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [Route("DeleteRole/{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
-            var value = _roleManager.Roles.FirstOrDefault(x => x.Id == id);
+            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
             var result = await _roleManager.DeleteAsync(value);
                 return RedirectToAction("Index");
            
         }
         [HttpGet]
         [Route("UpdateRole/{id}")]
-        public IActionResult UpdateRole(int id)
+        public async Task<IActionResult> UpdateRole(int id)
         {
-            var value = _roleManager.Roles.FirstOrDefault(x => x.Id == id);
+            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
             UpdateRoleViewModel updateRoleViewModel = new UpdateRoleViewModel()
             {
                 RoleID=value.Id,
@@ -75,24 +77,24 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [Route("UpdateRole/{id}")]
         public async Task<IActionResult> UpdateRole(UpdateRoleViewModel updateRoleViewModel)
         {
-            var value = _roleManager.Roles.FirstOrDefault(x => x.Id == updateRoleViewModel.RoleID);
+            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == updateRoleViewModel.RoleID);
             value.Name = updateRoleViewModel.RoleName;
             await _roleManager.UpdateAsync(value);
             return RedirectToAction("Index");
         }
         [Route("UserList")]
-        public IActionResult UserList()
+        public async Task< IActionResult> UserList()
         {
-            var values=_userManager.Users.ToList();
+            var values=await _userManager.Users.ToListAsync();
             return View(values);
         }
         [Route("AssignRole/{id}")]
         [HttpGet]
         public async Task <IActionResult>AssignRole(int id)
         {
-            var user=_userManager.Users.FirstOrDefault(x => x.Id == id);
+            var user=await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
             TempData["UserId"]=user.Id;
-            var roles=_roleManager.Roles.ToList();
+            var roles=await _roleManager.Roles.ToListAsync();
             var userRoles = await _userManager.GetRolesAsync(user);
             List<RoleAssignViewModel> roleAssignViewModels = new List<RoleAssignViewModel>();
             foreach (var item in roles)
@@ -110,7 +112,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         public async Task <IActionResult>AssignRole(List<RoleAssignViewModel> model)
         {
             var userid=(int)TempData["userId"];
-            var user = _userManager.Users.FirstOrDefault(x => x.Id == userid);
+            var user =await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userid);
             foreach (var item in model)
             {
                 if (item.RoleExist)

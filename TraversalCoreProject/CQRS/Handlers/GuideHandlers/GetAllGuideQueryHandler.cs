@@ -21,7 +21,7 @@ namespace TraversalCoreProject.CQRS.Handlers.GuideHandlers
         {
             return await _context.Guides.Select(x => new GetAllGuideQueryResult
             {
-                GuideID = x.GuideID,
+                GuideID = x.Id,
                 Name = x.Name,
                 Description = x.Description,
                 Image = x.Image

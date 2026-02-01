@@ -52,7 +52,7 @@ services.AddHttpClient();
 
 services.ContainerDependencies();
 
-services.AddAutoMapper(typeof(Program));
+
 
 services.CustomerValidator();
 

@@ -2,6 +2,7 @@
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.ViewComponents.MemberDashboard
 {
@@ -14,9 +15,9 @@ namespace TraversalCoreProject.ViewComponents.MemberDashboard
             _guideService = guideService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = _guideService.TGetList();
+            var values =await _guideService.GetListAsync();
             return View(values);
         }
     }

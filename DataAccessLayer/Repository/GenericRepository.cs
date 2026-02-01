@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace DataAccessLayer.Repository
 {
-    public class GenericRepository<T> : IGenericDal<T> where T : BaseEntity
+    public class GenericRepository<T> : IGenericDal<T> where T : class
     {
         private readonly Context _context;
 

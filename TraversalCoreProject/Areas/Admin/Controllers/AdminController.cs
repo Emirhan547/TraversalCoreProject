@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TraversalCoreProject.Controllers
+namespace TraversalCoreProject.Areas.Admin.Controllers
 {
     public class AdminController : Controller
     {

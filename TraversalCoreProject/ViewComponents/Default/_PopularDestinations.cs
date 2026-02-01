@@ -2,6 +2,7 @@
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.ViewComponents.Default
 {
@@ -14,9 +15,9 @@ namespace TraversalCoreProject.ViewComponents.Default
             _destinationService = destinationService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
-            var values = _destinationService.TGetList();
+            var values =await _destinationService.GetListAsync();
             return View(values);
         }
 

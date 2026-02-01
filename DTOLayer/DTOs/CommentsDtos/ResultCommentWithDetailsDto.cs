@@ -1,6 +1,4 @@
-﻿using DTOLayer.DTOs.DestinatonDTOs;
-using EntityLayer.Concrete;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOLayer.DTOs.CommentsDtos
 {
-    public class ResultCommentDto
+    public class ResultCommentWithDetailsDto
     {
         public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -19,7 +17,10 @@ namespace DTOLayer.DTOs.CommentsDtos
         public string CommentContent { get; set; }
         public bool CommentState { get; set; }
         public int DestinationId { get; set; }
-        public Destination Destinations { get; set; } 
+        public string DestinationCity { get; set; }
         public int AppUserId { get; set; }
+        public string AppUserName { get; set; }
+        public string AppUserSurname { get; set; }
+        public string AppUserImageUrl { get; set; }
     }
 }

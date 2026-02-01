@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using DTOLayer.DTOs.CommentsDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace TraversalCoreProje.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<EntityLayer.Concrete.AppUser> _userManager;
         public CommentController(UserManager<AppUser> userManager, ICommentService commentService)
         {
             _userManager = userManager;
@@ -32,11 +33,11 @@ namespace TraversalCoreProje.Controllers
             return PartialView();
         }
         [HttpPost]
-        public IActionResult AddComment(Comment p)
+        public async Task<IActionResult> AddComment(CreateCommentDto comment)
         {
-            p.CommentDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-            p.CommentState = true;
-            _commentService.TAdd(p);
+            comment.CommentDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            comment.CommentState = true;
+            await _commentService.AddAsync(comment);
             return RedirectToAction("Index", "Destination");
         }
     }

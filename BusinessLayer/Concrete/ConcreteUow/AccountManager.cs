@@ -29,19 +29,19 @@ namespace BusinessLayer.Concrete.ConcreteUow
         public void TInsert(Account t)
         {
             _accountDal.Insert(t);
-            _uowDal.Save();
+            _uowDal.SaveChangesAsync();
         }
 
         public void TMultiUpdate(List<Account> t)
         {
             _accountDal.MultiUpdate(t);
-            _uowDal.Save();
+            _uowDal.SaveChangesAsync();
         }
 
         public void TUpdate(Account t)
         {
             _accountDal.Update(t);
-            _uowDal.Save();
+            _uowDal.SaveChangesAsync();
         }
     }
 }

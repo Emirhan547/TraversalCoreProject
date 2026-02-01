@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.ViewComponents.MemberDashboard
 {
@@ -11,9 +12,9 @@ namespace TraversalCoreProject.ViewComponents.MemberDashboard
         {
             _destinationService = destinationService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values=_destinationService.TGetLast4Destinations();
+            var values=await _destinationService.GetLast4DestinationsAsync();
             return View(values);
         }
 

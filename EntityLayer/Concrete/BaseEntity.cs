@@ -18,4 +18,4 @@ namespace EntityLayer.Concrete
             public bool IsDeleted { get; set; }
         }
     }
-}
+

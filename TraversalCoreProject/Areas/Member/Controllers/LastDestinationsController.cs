@@ -13,9 +13,9 @@ namespace TraversalCoreProject.Areas.Member.Controllers
             _destinationService = destinationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            var values=_destinationService.TGetLast4Destinations();
+            var values=await _destinationService.GetLast4DestinationsAsync();
             return View(values);
         }
     }

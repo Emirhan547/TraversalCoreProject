@@ -1,4 +1,4 @@
-﻿@model List<DTOLayer.DTOs.AnnouncementDTOs.ResultAnnouncementDto>
+﻿@model List<DTOLayer.DTOs.AnnouncementDtos.ResultAnnouncementDto>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -18,11 +18,11 @@
     @foreach(var item in Model)
     {
         <tr>
-            <td>@item.AnnouncementID</td>
+            <td>@item.Id</td>
             <td>@item.Title</td>
             <td>@item.Content</td>
-            <td><a href="/Admin/Announcement/DeleteAnnouncement/@item.AnnouncementID" class="btn btn-outline-danger">Sil</a></td>
-            <td><a href="/Admin/Announcement/UpdateAnnouncement/@item.AnnouncementID" class="btn btn-outline-success">Güncelle</a></td>
+            <td><a href="/Admin/Announcement/DeleteAnnouncement/@item.Id" class="btn btn-outline-danger">Sil</a></td>
+            <td><a href="/Admin/Announcement/UpdateAnnouncement/@item.Id" class="btn btn-outline-success">Güncelle</a></td>
             <td><a href="#" class="btn btn-outline-dark">Detaylar</a></td>
         </tr>
     }

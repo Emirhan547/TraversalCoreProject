@@ -1,4 +1,5 @@
-﻿using DTOLayer.DTOs.AnnouncementDTOs;
+﻿using DTOLayer.DTOs.AnnouncementDtos;
+
 using EntityLayer.Concrete;
 using FluentValidation;
 using System;

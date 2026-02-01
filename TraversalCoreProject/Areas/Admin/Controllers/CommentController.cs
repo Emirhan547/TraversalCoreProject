@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -15,16 +14,16 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             _commentService = commentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _commentService.TGetListCommentWithDestination();   
+            var values = await _commentService.GetCommentsWithDestinationAsync();
             return View(values);
         }
-        public IActionResult DeleteComment(int id)
+
+        public async Task<IActionResult> DeleteComment(int id)
         {
-            var values =_commentService.TGetById(id);
-            _commentService.TDelete(values);
-            return RedirectToAction("Index");
+            await _commentService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

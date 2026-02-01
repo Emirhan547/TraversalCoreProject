@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using BusinessLayer.Abstract;
-using DTOLayer.DTOs.AnnouncementDTOs;
-using EntityLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AnnouncementDtos;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TraversalCoreProject.Areas.Admin.Models;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -13,19 +12,18 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
     public class AnnouncementController : Controller
     {
         private readonly IAnnouncementService _announcementService;
-        private readonly IMapper _mapper;
 
-        public AnnouncementController(IAnnouncementService announcementService, IMapper mapper)
+        public AnnouncementController(IAnnouncementService announcementService)
         {
             _announcementService = announcementService;
-            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _mapper.Map<List<ResultAnnouncementDto>>(_announcementService.TGetList());
+            var values = await _announcementService.GetListAsync();
             return View(values);
         }
+
         [HttpGet]
         public IActionResult AddAnnouncement()
         {
@@ -33,45 +31,38 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddAnnouncement(CreateAnnouncementDto model)
+        public async Task<IActionResult> AddAnnouncement(CreateAnnouncementDto model)
         {
-            if (ModelState.IsValid)
+            model.Date = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            await _announcementService.AddAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteAnnouncement(int id)
+        {
+            await _announcementService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateAnnouncement(int id)
+        {
+            var values = await _announcementService.GetByIdAsync(id);
+            if (values is null)
             {
-                _announcementService.TAdd(new Announcement()
-                {
-                    Title = model.Title,
-                    Content = model.Content,
-                    Date = Convert.ToDateTime(DateTime.Now.ToShortDateString())
-                });
-                return RedirectToAction("Index");
+                return NotFound();
             }
+            var model = values.Adapt<UpdateAnnouncementDto>();
             return View(model);
         }
-        public IActionResult DeleteAnnouncement(int id)
-        {
-            var values = _announcementService.TGetById(id);
-            _announcementService.TDelete(values);
-            return RedirectToAction("Index");
-        }
-        [HttpGet]
-        public IActionResult UpdateAnnouncement(int id)
-        {
-            var values = _mapper.Map<UpdateAnnouncementDto>(_announcementService.TGetById(id));
 
-            return View(values);
-        }
         [HttpPost]
-        public IActionResult UpdateAnnouncement(UpdateAnnouncementDto model)
+        public async Task<IActionResult> UpdateAnnouncement(UpdateAnnouncementDto model)
         {
             if (ModelState.IsValid)
             {
-                _announcementService.TUpdate(new Announcement()
-                {
-                    AnnouncementID = model.AnnouncementID,
-                    Title = model.Title,
-                    Content = model.Content,
-                    Date = Convert.ToDateTime(DateTime.Now.ToShortDateString())
-                });
+                model.Date = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                await _announcementService.UpdateAsync(model);
                 return RedirectToAction("Index");
             }
             return View(model);

@@ -3,6 +3,7 @@ using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Member.Controllers
 {
@@ -17,15 +18,15 @@ namespace TraversalCoreProject.Areas.Member.Controllers
             _destinationService = destinationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _destinationService.TGetList();
+            var values =await _destinationService.GetListAsync();
             return View(values);
         }
-        public IActionResult GetCitiesSearchByName(string searchString)
+        public async Task<IActionResult> GetCitiesSearchByName(string searchString)
         {
             ViewData["CurrentFilter"]= searchString;
-            var values=from x in _destinationService.TGetList() select x;
+            var values= from x in await _destinationService.GetListAsync() select x;
             if (!string.IsNullOrEmpty(searchString))
             {
                 values = values.Where(y => y.City.Contains(searchString));

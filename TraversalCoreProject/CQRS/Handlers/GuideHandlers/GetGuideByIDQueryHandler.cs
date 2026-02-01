@@ -19,7 +19,7 @@ namespace TraversalCoreProject.CQRS.Handlers.GuideHandlers
             var values =await _context.Guides.FindAsync(request.Id);
             return new GetGuideByIDQueryResult
             {
-                GuideID = values.GuideID, 
+                GuideID = values.Id, 
                 Description = values.Description,
                 Name = values.Name
 

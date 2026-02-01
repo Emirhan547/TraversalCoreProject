@@ -1,4 +1,4 @@
-﻿using DTOLayer.DTOs.AppRoleDtos;
+﻿
 using DTOLayer.DTOs.AppUserDtos;
 using EntityLayer.Concrete;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IAppUserService:IGenericService<ResultAppRoleDto,CreateAppUserDto,UpdateAppUserDto>    
+    public interface IAppUserService:IGenericService<ResultAppUserDto,CreateAppUserDto,UpdateAppUserDto>    
     {
     }
 }

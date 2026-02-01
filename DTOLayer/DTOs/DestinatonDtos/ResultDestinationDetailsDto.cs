@@ -1,5 +1,4 @@
-﻿using DTOLayer.DTOs.GuideDtos;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOLayer.DTOs.DestinatonDtos
 {
-    public class ResultDestinationDto
+    public class ResultDestinationDetailsDto
     {
         public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -26,6 +25,9 @@ namespace DTOLayer.DTOs.DestinatonDtos
         public string Image2 { get; set; }
         public DateTime Date { get; set; }
         public int GuideId { get; set; }
-        public ResultGuideDto Guide { get; set; }
+        public string GuideName { get; set; }
+        public string GuideDescription { get; set; }
+        public string GuideDescription2 { get; set; }
+        public string GuideImage { get; set; }
     }
 }

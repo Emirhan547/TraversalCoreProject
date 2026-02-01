@@ -21,10 +21,10 @@ namespace TraversalCoreProje.ViewComponents.Comment
             _context = context;
         }
 
-        public IViewComponentResult Invoke(int id)
+        public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            ViewBag.commentCount = _context.Comments.Where(x => x.DestinationID == id).Count();
-            var values = _commentService.TGetListCommentWithDestinationAndUser(id);
+            ViewBag.commentCount = _context.Comments.Where(x => x.Id == id).Count();
+            var values =await _commentService.GetCommentsWithDestinationAndUserAsync(id);
             return View(values);
         }
     }

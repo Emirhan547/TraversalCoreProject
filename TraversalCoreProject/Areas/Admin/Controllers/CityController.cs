@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.DestinatonDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 using TraversalCoreProject.Models;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
@@ -14,37 +16,38 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         {
             _destinationService = destinationService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var values=await _destinationService.GetListAsync();
+            return View(values);
         }
-        public IActionResult CityList()
+        public async Task<IActionResult> CityList()
         {
-            var jsonCity =JsonConvert.SerializeObject(_destinationService.TGetList());
+            var values = await _destinationService.GetListAsync();
+            var jsonCity = JsonConvert.SerializeObject(values);
             return Json(jsonCity);
         }
         [HttpPost]
-        public IActionResult AddCityDestination(Destination destination)
+        public async Task<IActionResult> AddCityDestination(CreateDestinationDto destination)
         {
-            _destinationService.TAdd(destination);
+          await  _destinationService.AddAsync(destination);
             var values = JsonConvert.SerializeObject(destination);
             return Json(values);
         }
         public IActionResult GetById(int DestinationId)
         { 
-            var values = _destinationService.TGetById(DestinationId);
+            var values = _destinationService.GetByIdAsync(DestinationId);
             var jsonValues = JsonConvert.SerializeObject(values);
             return Json(jsonValues);
         }
-        public IActionResult DeleteCity(int id)
+        public async Task<IActionResult> DeleteCity(int id)
         {
-            var values = _destinationService.TGetById(id);
-            _destinationService.TDelete(values);
+           await _destinationService.DeleteAsync(id);
             return NoContent();
         }
-        public IActionResult UpdateCity(Destination destination)
+        public async Task<IActionResult> UpdateCity(UpdateDestinationDto destination)
         { 
-            _destinationService.TUpdate(destination);
+           await _destinationService.UpdateAsync(destination);
             var v = JsonConvert.SerializeObject(destination);
             return Json(v);
         }

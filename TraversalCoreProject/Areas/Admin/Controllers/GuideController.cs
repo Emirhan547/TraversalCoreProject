@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
+using DTOLayer.DTOs.GuideDtos;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -20,9 +22,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         }
         [Route("")]
         [Route("Index")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _guideService.TGetList();
+            var values =await _guideService.GetListAsync();
             return View(values);
         }
         [Route("AddGuide")]
@@ -33,49 +35,55 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         }
         [Route("AddGuide")]
         [HttpPost]
-        public IActionResult AddGuide(Guide guide)
+        public async Task<IActionResult> AddGuide(CreateGuideDto guide)
         {
-            GuideValidator validationRules = new GuideValidator();
-            ValidationResult result = validationRules.Validate(guide);
-            if (result.IsValid)
-            {
-                _guideService.TAdd(guide);
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
-                return View();
-            }
+            await _guideService.AddAsync(guide);
+            return RedirectToAction("Index");
+           
+       }
             
-        }
+        
         [Route("EditGuide")]
         [HttpGet]
-        public IActionResult EditGuide(int id)
+        public async Task<IActionResult> EditGuide(int id)
         {
-            var values = _guideService.TGetById(id);
-            return View(values);
+            var values = await _guideService.GetByIdAsync(id);
+            if (values is null)
+            {
+                return NotFound();
+            }
+
+            var model = new UpdateGuideDto
+            {
+                Id = values.Id,
+                Name = values.Name,
+                Description = values.Description,
+                Image = values.Image,
+                TwitterUrl = values.TwitterUrl,
+                Description2 = values.Description2,
+                GuideListImage = values.GuideListImage,
+                InstagramUrl = values.InstagramUrl,
+                Status = values.Status
+            };
+            return View(model);
         }
         [Route("EditGuide")]
         [HttpPost]
-        public IActionResult EditGuide(Guide guide)
+        public async Task<IActionResult> EditGuide(UpdateGuideDto guide)
         {
-            _guideService.TUpdate(guide);
+           await _guideService.UpdateAsync(guide);
             return RedirectToAction("Index");
         }
         [Route("ChangeToTrue/{id}")]
-        public IActionResult ChangeToTrue(int id)
+        public async Task<IActionResult> ChangeToTrue(int id)
         {
-            _guideService.TChangeToTrueByGuide(id);
+           await _guideService.ChangeGuideStatusToTrueAsync(id);
             return RedirectToAction("Index", "Guide", new { area = "Admin" });
         }
         [Route("ChangeToFalse/{id}")]
-        public IActionResult ChangeToFalse(int id)
+        public async Task<IActionResult> ChangeToFalse(int id)
         {
-            _guideService.TChangeToFalseByGuide(id);
+           await _guideService.ChangeGuideStatusToFalseAsync(id);
             return RedirectToAction("Index", "Guide", new { area = "Admin" });
 
         }

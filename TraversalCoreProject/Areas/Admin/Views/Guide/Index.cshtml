@@ -1,5 +1,6 @@
-﻿@using EntityLayer.Concrete
-@model List<Guide>
+﻿@using DTOLayer.DTOs.GuideDtos
+
+@model List<ResultGuideDto>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -34,16 +35,16 @@
             @{
                 if (item.Status)
                 {
-                    <td><a href="/Admin/Guide/ChangeToFalse/@item.GuideID"class="btn btn-outline-warning">Pasif Yap</a></td>
+                    <td><a href="/Admin/Guide/ChangeToFalse/@item.Id" class="btn btn-outline-warning">Pasif Yap</a></td>
                 }
                 else
                 {
-                    <td><a href="/Admin/Guide/ChangeToTrue/@item.GuideID" class="btn btn-outline-info">Aktif Yap</a></td>
+                    <td><a href="/Admin/Guide/ChangeToTrue/@item.Id" class="btn btn-outline-info">Aktif Yap</a></td>
                 }
             }
 
             <td>
-                <a href="/Admin/Guide/EditGuide/" class="btn btn-outline-success">Düzenle</a>
+                <a href="/Admin/Guide/EditGuide/@item.Id" class="btn btn-outline-success">Düzenle</a>
             </td>
         </tr>
     }

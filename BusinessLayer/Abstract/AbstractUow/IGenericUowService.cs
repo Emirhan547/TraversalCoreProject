@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract.AbstractUow
 {
-    public interface IGenericUowService<T>
+    public interface IGenericUowService<TCreateDto, TUpdateDto, TResultDto>
     {
-        void TInsert(T t);
-        void TUpdate(T t);
-        void TMultiUpdate(List<T> t);
-        T TGetByID(int id);
+        Task AddAsync(TCreateDto dto);
+        Task UpdateAsync(TUpdateDto dto);
+        Task UpdateRangeAsync(List<TUpdateDto> dtos);
+        Task<TResultDto?> GetByIdAsync(int id);
     }
 }
  

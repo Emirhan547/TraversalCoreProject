@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AppUserDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -18,35 +20,34 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var values = _appUserService.TGetList();
+            var values = _appUserService.GetListAsync();
             return View(values);
         }
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var values = _appUserService.TGetById(id);
-            _appUserService.TDelete(values);
+           await _appUserService.DeleteAsync(id);
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult EditUser(int id)
+        public async Task<IActionResult> EditUser(int id)
         {
-            var values = _appUserService.TGetById(id);
+            var values =await _appUserService.GetByIdAsync(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult EditUser(AppUser appUser)
+        public async Task<IActionResult> EditUser(UpdateAppUserDto appUser)
         {
-            _appUserService.TUpdate(appUser);
+          await _appUserService.UpdateAsync(appUser);
             return RedirectToAction("Index");
         }
-        public IActionResult CommentUser(int id)
+        public async Task<IActionResult> CommentUser(int id)
         {
-            _appUserService.TGetList();
+           await _appUserService.GetListAsync();
             return View();
         }
-        public IActionResult ReservationUser(int id)
+        public async Task<IActionResult> ReservationUser(int id)
         {
-            var values = _reservationService.GetListWithReservationByAccepted(id);
+            var values =await _reservationService.GetListWithReservationByAcceptedAsync(id);
             return View(values);
         }
     }

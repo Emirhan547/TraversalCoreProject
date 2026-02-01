@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -13,9 +14,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             _contactUsService = contactUsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _contactUsService.TGetListContactUsByTrue();
+            var values =await _contactUsService.GetListContactUsByTrueAsync();
             return View(values);
         }
     }

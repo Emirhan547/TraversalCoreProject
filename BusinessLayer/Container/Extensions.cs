@@ -6,7 +6,7 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using DataAccessLayer.UnitOfWork;
-using DTOLayer.DTOs.AnnouncementDTOs;
+using DTOLayer.DTOs.AnnouncementDtos;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System;

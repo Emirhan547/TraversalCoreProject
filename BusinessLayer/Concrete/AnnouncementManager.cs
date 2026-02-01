@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.UnitOfWork;
-using DTOLayer.DTOs.AnnouncementDTOs;
+using DTOLayer.DTOs.AnnouncementDtos;
 using EntityLayer.Concrete;
 using Mapster;
 using System;
