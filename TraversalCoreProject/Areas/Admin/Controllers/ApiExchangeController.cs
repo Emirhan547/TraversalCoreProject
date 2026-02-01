@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using TraversalCoreProject.Areas.Admin.Models;
+using DTOLayer.DTOs.ExternalApiDtos;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -11,7 +11,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [AllowAnonymous]
         public async Task <IActionResult> Index()
         {
-            List<BookingExchangeViewModel2>bookingExchangeViewModels = new List<BookingExchangeViewModel2>();
+           
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
@@ -27,7 +27,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             {
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
-                var values=JsonConvert.DeserializeObject<BookingExchangeViewModel2>(body);
+                var values = JsonConvert.DeserializeObject<BookingExchangeDto>(body);
                 return View(values.exchange_rates);
             }
         }

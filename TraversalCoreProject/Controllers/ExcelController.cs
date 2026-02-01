@@ -1,9 +1,10 @@
 ﻿using BusinessLayer.Abstract;
 using ClosedXML.Excel;
 using DataAccessLayer.Concrete;
+using DTOLayer.DTOs.DestinatonDtos;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
-using TraversalCoreProject.Models;
+
 
 namespace TraversalCoreProject.Controllers
 {
@@ -22,12 +23,12 @@ namespace TraversalCoreProject.Controllers
           return View();
 
         }
-        public List<DestinationModel> DestinationList()
+        public List<DestinationExcelDto> DestinationList()
         {
-            List<DestinationModel> destinationModels = new List<DestinationModel>();
-            
-                destinationModels = _context.Destinations.Select(x => new DestinationModel
-                {
+            List<DestinationExcelDto> destinationModels = new List<DestinationExcelDto>();
+
+            destinationModels = _context.Destinations.Select(x => new DestinationExcelDto
+            {
                     City = x.City,
                     DayNight = x.DayNight,
                     Price = x.Price,

@@ -1,8 +1,8 @@
-﻿using EntityLayer.Concrete;
+﻿using DTOLayer.DTOs.CommentsDtos;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TraversalCoreProject.Models;
+
 
 
 namespace TraversalCoreProje.ViewComponents.Comment
@@ -18,7 +18,7 @@ namespace TraversalCoreProje.ViewComponents.Comment
 
         public async Task<IViewComponentResult> InvokeAsync(int destinationId)
         {
-            var model = new AddCommentViewModel
+            var model = new CreateCommentDto
             {
                 DestinationId = destinationId
             };

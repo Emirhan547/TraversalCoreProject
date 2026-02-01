@@ -4,7 +4,7 @@ using DTOLayer.DTOs.DestinatonDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using TraversalCoreProject.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {

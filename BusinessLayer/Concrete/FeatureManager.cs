@@ -40,7 +40,7 @@ namespace BusinessLayer.Concrete
         public async Task<ResultFeatureDto?> GetByIdAsync(int id)
         {
             var values = await _featureDal.GetByIdAsync(id);
-            return  _featureDal.Adapt<ResultFeatureDto>();
+            return values?.Adapt<ResultFeatureDto>();
         }
 
         public async Task<IReadOnlyList<ResultFeatureDto>> GetListAsync()

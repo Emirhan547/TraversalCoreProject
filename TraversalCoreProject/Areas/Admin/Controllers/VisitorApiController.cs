@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DTOLayer.DTOs.VisitorDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
-using TraversalCoreProject.Areas.Admin.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -24,7 +25,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<VisitorViewModel>>(jsonData);
+                var values = JsonConvert.DeserializeObject<List<VisitorDto>>(jsonData);
                 return View(values);
             }
             return View();
@@ -35,7 +36,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddVisitor(VisitorViewModel p)
+        public async Task<IActionResult> AddVisitor(VisitorDto p)
         {
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(p);
@@ -66,13 +67,13 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<VisitorViewModel>(jsonData);
+                var values = JsonConvert.DeserializeObject<VisitorDto>(jsonData);
                 return View(values);
             } 
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateVisitor(VisitorViewModel p)
+        public async Task<IActionResult> UpdateVisitor(VisitorDto p)
         {
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(p);

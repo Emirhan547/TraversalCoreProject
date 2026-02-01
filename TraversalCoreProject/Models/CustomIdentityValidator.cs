@@ -44,7 +44,7 @@ namespace TraversalCoreProject.Models
                 Description = "Şifreniz en az bir özel karakter içermelidir."
             };
         }
-        
+
 
     }
 }

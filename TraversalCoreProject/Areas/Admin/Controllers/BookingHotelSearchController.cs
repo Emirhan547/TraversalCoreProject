@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DTOLayer.DTOs.ExternalApiDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using TraversalCoreProject.Areas.Admin.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -28,7 +29,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 var bodyReplace= body.Replace(".","");
-                var values=JsonConvert.DeserializeObject<BookingHotelSearchViewModel>(bodyReplace);
+                var values = JsonConvert.DeserializeObject<BookingHotelSearchDto>(bodyReplace);
                 return View(values.result);
             }
         }

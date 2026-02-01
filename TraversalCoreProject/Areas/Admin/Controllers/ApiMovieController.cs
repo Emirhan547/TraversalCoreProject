@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DTOLayer.DTOs.ExternalApiDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using TraversalCoreProject.Areas.Admin.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -11,7 +12,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
     {
         public async Task <IActionResult> Index()
         {
-            List<ApiMovieViewModel> apiMovies= new List<ApiMovieViewModel>();
+            List<ApiMovieDto> apiMovies = new List<ApiMovieDto>();
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
@@ -27,7 +28,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             {
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
-                apiMovies=JsonConvert.DeserializeObject<List<ApiMovieViewModel>>(body);
+                apiMovies = JsonConvert.DeserializeObject<List<ApiMovieDto>>(body);
                 return View(apiMovies);
             }
         }

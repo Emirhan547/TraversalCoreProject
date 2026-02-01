@@ -1,15 +1,10 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.AppRoleDtos;
-using EntityLayer.Concrete;
 
 
-using BusinessLayer.Abstract;
-using DTOLayer.DTOs.AppRoleDtos;
 using Microsoft.AspNetCore.Mvc;
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TraversalCoreProject.Areas.Admin.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -39,11 +34,11 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         }
         [HttpPost]
         [Route("CreateRole")]
-        public async Task<IActionResult> CreateRole(CreateRoleViewModel createRoleViewModel)
+        public async Task<IActionResult> CreateRole(CreateAppRoleDto createRoleViewModel)
         {
             var role = new CreateAppRoleDto
             {
-                Name = createRoleViewModel.RoleName
+                Name = createRoleViewModel.Name
             };
 
             var result = await _appRoleService.CreateAsync(role);
@@ -74,21 +69,21 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            UpdateRoleViewModel updateRoleViewModel = new UpdateRoleViewModel
+            UpdateAppRoleDto updateRoleViewModel = new UpdateAppRoleDto
             {
-                RoleID = value.Id,
-                RoleName = value.Name
+                Id = value.Id,
+                Name = value.Name
             };
             return View(updateRoleViewModel);
         }
         [HttpPost]
         [Route("UpdateRole/{id}")]
-        public async Task<IActionResult> UpdateRole(UpdateRoleViewModel updateRoleViewModel)
+        public async Task<IActionResult> UpdateRole(UpdateAppRoleDto updateRoleViewModel)
         {
             var dto = new UpdateAppRoleDto
             {
-                Id = updateRoleViewModel.RoleID,
-                Name = updateRoleViewModel.RoleName
+                Id = updateRoleViewModel.Id,
+                Name = updateRoleViewModel.Name
             };
             await _appRoleService.UpdateAsync(dto);
             return RedirectToAction("Index");

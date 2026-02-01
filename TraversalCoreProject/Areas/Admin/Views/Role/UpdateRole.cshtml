@@ -1,4 +1,6 @@
-﻿@model UpdateRoleViewModel
+﻿@using DTOLayer.DTOs.AppRoleDtos
+@model UpdateAppRoleDto
+
 @{
     ViewData["Title"] = "UpdateRole";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -8,9 +10,9 @@
 <h1>Rol Düzenleme Sayfası</h1>
 
 <form method="post">
-    <input type="hidden"asp-for="RoleID"/>
+    <input type="hidden" asp-for="Id" />
     <label>Rol Adı</label>
-    <input type="text" class="form-control"asp-for="RoleName"/>
+    <input type="text" class="form-control" asp-for="Name" />
     <br />
     <button class="btn btn-outline-success">Rolu Güncelle</button>
 </form>

@@ -3,7 +3,7 @@ using DTOLayer.DTOs.AppUserDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TraversalCoreProject.Areas.Member.Models;
+
 
 namespace TraversalCoreProject.Areas.Member.Controllers
 {
@@ -22,26 +22,25 @@ namespace TraversalCoreProject.Areas.Member.Controllers
         {
             if (User.Identity?.Name is null)
             {
-                return View(new UserEditViewModel());
+                return View(new UserEditDto());
             }
 
             var values = await _authService.GetByUserNameAsync(User.Identity.Name);
             if (values == null)
             {
-                return View(new UserEditViewModel());
+                return View(new UserEditDto());
             }
-            UserEditViewModel userEditViewModel = new UserEditViewModel();
+            UserEditDto userEditViewModel = new UserEditDto();
 
+            userEditViewModel.Name = values.Name;
+            userEditViewModel.Surname = values.Surname;
+            userEditViewModel.PhoneNumber = values.PhoneNumber;
+            userEditViewModel.Mail = values.Email;
 
-            userEditViewModel.name = values.Name;
-            userEditViewModel.surname = values.Surname;
-            userEditViewModel.phonenumber = values.PhoneNumber;
-            userEditViewModel.mail = values.Email;
-            
             return View(userEditViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(UserEditViewModel p)
+        public async Task<IActionResult> Index(UserEditDto p)
         {
             if (User.Identity?.Name is null)
             {
@@ -56,21 +55,21 @@ namespace TraversalCoreProject.Areas.Member.Controllers
 
             var profileDto = new UpdateAppUserProfileDto
             {
-                Id = user.Id,
-                Name = p.name,
-                Surname = p.surname,
-                Email = p.mail,
-                PhoneNumber = p.phonenumber,
-                Password = p.password
+                Name = p.Name,
+                Surname = p.Surname,
+                Email = p.Mail,
+                PhoneNumber = p.PhoneNumber,
+                Password = p.Password
             };
-            if (p.Image != null)
+            if (Request.Form.Files.Count > 0)
             {
+                var imageFile = Request.Form.Files[0];
                 var resource = Directory.GetCurrentDirectory();
-                var extension = Path.GetExtension(p.Image.FileName);
+                var extension = Path.GetExtension(imageFile.FileName);
                 var imagename = Guid.NewGuid() + extension;
                 var savelocation = resource + "/wwwroot/userimages/" + imagename;
                 var stream = new FileStream(savelocation, FileMode.Create);
-                await p.Image.CopyToAsync(stream);
+                await imageFile.CopyToAsync(stream);
                 profileDto.ImageUrl = imagename;
             }
             var result = await _authService.UpdateProfileAsync(profileDto);

@@ -1,4 +1,5 @@
-﻿@model CreateRoleViewModel
+﻿@using DTOLayer.DTOs.AppRoleDtos
+@model CreateAppRoleDto
 @{
     ViewData["Title"] = "CreateRole";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -9,7 +10,7 @@
 
 <form method="post">
     <label>Rol Adını Giriniz</label>
-    <input type="text"class="form-control"asp-for="RoleName"/>
+    <input type="text" class="form-control" asp-for="Name" />
     <br />
     <button class="btn btn-primary">Rolü Ekle</button>
 </form>

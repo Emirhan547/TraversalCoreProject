@@ -1,4 +1,5 @@
-﻿@model TraversalCoreProject.Areas.Member.Models.UserEditViewModel
+﻿@using DTOLayer.DTOs.AppUserDtos
+@model UserEditDto
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_MemberLayout.cshtml";
@@ -23,26 +24,26 @@
                     <p class="card-text">Profil ile ilgili bilgilerinizi bu sayfadan güncelleyebilirsiniz.</p>
                     <form method="post" enctype="multipart/form-data">
                         @Html.Label("Adınız")
-                        <input type="text" asp-for="name" class="form-control" />
+                        <input type="text" asp-for="Name" class="form-control" />
                         <br />
                         @Html.Label("Soyadınız")
-                        <input type="text" asp-for="surname" class="form-control" />
+                        <input type="text" asp-for="Surname" class="form-control" />
                         <br />
                         @Html.Label("Mail Adresiniz")
-                        <input type="text" asp-for="mail" class="form-control" />
+                        <input type="text" asp-for="Mail" class="form-control" />
                         <br />
                         @Html.Label("Şifreniz")
-                        <input type="text" asp-for="password" class="form-control" />
+                        <input type="text" asp-for="Password" class="form-control" />
                         <br />
                         @Html.Label("Şifre Tekrar")
-                        <input type="text" asp-for="confirmpassword" class="form-control" />
+                        <input type="text" asp-for="ConfirmPassword" class="form-control" />
                         <br />
                         @Html.Label("Telefon Numarası")
-                        <input type="text" asp-for="phonenumber" class="form-control" />
+                        <input type="text" asp-for="PhoneNumber" class="form-control" />
                         <br />
                         <div class="form-group">
                             <label>Resim Seçiniz</label>
-                            <input type="file" asp-for="Image" />
+                            <input type="file" name="Image" />
                         </div>
                         <br />
                         <button class="btn btn-primary">Bilgileri Güncelle</button>

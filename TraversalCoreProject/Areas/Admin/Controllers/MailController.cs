@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TraversalCoreProject.Models;
-
-using MimeKit;
+﻿using DTOLayer.DTOs.MailDTOs;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using TraversalCoreProject.Models;
 
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
@@ -16,7 +16,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(MailRequest mailRequest)
+        public IActionResult Index(MailRequestDTOs mailRequest)
         {
             MimeMessage mimeMessage = new MimeMessage();
             MailboxAddress mailboxAddressFrom = new MailboxAddress ("Admin","emirhanhacioglu372@gmail.com");

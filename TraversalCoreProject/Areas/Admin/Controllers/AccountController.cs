@@ -3,8 +3,7 @@ using DTOLayer.DTOs.AccountDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TraversalCoreProject.Areas.Admin.Models;
+
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
@@ -25,7 +24,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(AccountViewModel model)
+        public async Task<IActionResult> Index(AccountTransferDto model)
         {
             var valueSender = await _accountService.GetByIdAsync(model.SenderID);
             var valueReceiver = await _accountService.GetByIdAsync(model.ReceiverID);

@@ -1,12 +1,13 @@
 ﻿
 using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AuthDtos;
 using EntityLayer.Concrete;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using System.Threading.Tasks;
-using TraversalCoreProject.Models;
+
 
 namespace TraversalCoreProject.Controllers
 {
@@ -25,7 +26,7 @@ namespace TraversalCoreProject.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel)
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordDto forgetPasswordViewModel)
         {
             var user = await _authService.GetByEmailAsync(forgetPasswordViewModel.Mail);
             if (user == null)
@@ -66,7 +67,7 @@ namespace TraversalCoreProject.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordViewModel)
         {
             var userid = TempData["userid"];
             var token = TempData["token"];

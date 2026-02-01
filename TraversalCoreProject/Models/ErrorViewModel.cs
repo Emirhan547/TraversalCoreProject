@@ -1,4 +1,4 @@
-namespace TraversalCoreProject.Models
+﻿namespace TraversalCoreProject.Models
 {
     public class ErrorViewModel
     {

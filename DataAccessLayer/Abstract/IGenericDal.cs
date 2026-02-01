@@ -13,6 +13,8 @@ namespace DataAccessLayer.Abstract
         void UpdateAsync(T entity);
         void DeleteAsync(T entity);
         Task<IReadOnlyList<T>> GetListAsync();
+        Task<IReadOnlyList<T>> GetListIncludingDeletedAsync();
+        Task<IReadOnlyList<T>> GetDeletedListAsync();
         Task<T?> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> GetListByFilterAsync(Expression<Func<T, bool>> filter);
 

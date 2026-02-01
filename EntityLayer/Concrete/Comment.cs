@@ -9,7 +9,7 @@ namespace EntityLayer.Concrete
 {
     public class Comment : BaseEntity
     {
-        [Key]
+      
         public string CommentUser { get; set; }
         public DateTime CommentDate { get; set; }
         public string CommentContent { get; set; }
