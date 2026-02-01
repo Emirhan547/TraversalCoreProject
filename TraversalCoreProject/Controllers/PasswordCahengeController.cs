@@ -1,4 +1,5 @@
-﻿using AutoMapper.Internal;
+﻿
+using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +12,11 @@ namespace TraversalCoreProject.Controllers
 {
     public class PasswordCahengeController : Controller
     {
-        private readonly UserManager<AppUser>_userManager;
+        private readonly IAuthService _authService;
 
-        public PasswordCahengeController(UserManager<AppUser> userManager)
+        public PasswordCahengeController(IAuthService authService)
         {
-            _userManager = userManager;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -26,8 +27,13 @@ namespace TraversalCoreProject.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel)
         {
-            var user =await _userManager.FindByEmailAsync(forgetPasswordViewModel.Mail);
-            string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var user = await _authService.GetByEmailAsync(forgetPasswordViewModel.Mail);
+            if (user == null)
+            {
+                return View(forgetPasswordViewModel);
+            }
+
+            string passwordResetToken = await _authService.GeneratePasswordResetTokenAsync(user.Id);
             var passwordResetTokenLink = Url.Action("ResetPassword", "PasswordChanges", new
             {
                 userId = user.Id,
@@ -67,8 +73,12 @@ namespace TraversalCoreProject.Controllers
             if (userid == null || token == null)
             { 
             }
-            var user = await _userManager.FindByIdAsync(userid.ToString());
-            var result=await _userManager.ResetPasswordAsync(user,token.ToString(),resetPasswordViewModel.Password);
+            if (!int.TryParse(userid.ToString(), out var userId))
+            {
+                return View();
+            }
+
+            var result = await _authService.ResetPasswordAsync(userId, token.ToString(), resetPasswordViewModel.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction("SignIn", "Login");

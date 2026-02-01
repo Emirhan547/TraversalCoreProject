@@ -8,7 +8,7 @@ namespace BusinessLayer.Abstract
         : IGenericService<ResultCommentDto, CreateCommentDto, UpdateCommentDto>
     {
         Task<IReadOnlyList<ResultCommentDto>> GetByDestinationIdAsync(int destinationId);
-        Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAsync();
-        Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAndUserAsync(int userId);
+        Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAsync();
+        Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAndUserAsync(int userId);
     }
 }

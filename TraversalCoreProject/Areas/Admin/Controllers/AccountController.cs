@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract.AbstractUow;
+using DTOLayer.DTOs.AccountDtos;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,16 +27,28 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(AccountViewModel model)
         {
-            var valueSender =await _accountService.GetByIdAsync(model.SenderID);
-            var valueReceiver =await _accountService.GetByIdAsync(model.ReceiverID);
-            valueSender.Balance -= model.Amount;
-            valueReceiver.Balance += model.Amount;
-            List<Account> modifiedAccounts = new List<Account>
+            var valueSender = await _accountService.GetByIdAsync(model.SenderID);
+            var valueReceiver = await _accountService.GetByIdAsync(model.ReceiverID);
+            if (valueSender == null || valueReceiver == null)
             {
-            valueSender,
-            valueReceiver,
-            };
-            _accountService.TMultiUpdate(modifiedAccounts);
+                return View(model);
+            }
+            var modifiedAccounts = new List<UpdateAccountDto>
+            {
+                new UpdateAccountDto
+                {
+                    Id = valueSender.Id,
+                    Name = valueSender.Name,
+                    Balance = valueSender.Balance - model.Amount
+                },
+                new UpdateAccountDto
+                {
+                    Id = valueReceiver.Id,
+                    Name = valueReceiver.Name,
+                    Balance = valueReceiver.Balance + model.Amount
+                }
+                };
+            await _accountService.UpdateRangeAsync(modifiedAccounts);
             return View();
         }
 

@@ -1,4 +1,5 @@
-﻿using DTOLayer.DTOs.ContactUsDtos;
+﻿using DTOLayer.DTOs.ContactDTOs;
+using DTOLayer.DTOs.ContactUsDtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,5 +11,6 @@ namespace BusinessLayer.Abstract
         Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync();
         Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByFalseAsync();
         Task ContactUsStatusChangeToFalseAsync(int id);
+        Task AddAsync(SendMessageDto dto);
     }
 }

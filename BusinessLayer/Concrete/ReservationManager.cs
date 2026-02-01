@@ -63,22 +63,37 @@ namespace BusinessLayer.Concrete
         }
 
 
-        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByWaitApprovalAsync(int userId)
+        public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByWaitApprovalAsync(int userId)
         {
             var entities = await _reservationDal.GetListWithReservationByWaitApprovalAsync(userId);
-            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
+            return entities.Select(entity =>
+            {
+                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
+                dto.DestinationCity = entity.Destination?.City;
+                return dto;
+            }).ToList();
         }
 
-        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByAcceptedAsync(int userId)
+        public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByAcceptedAsync(int userId)
         {
             var entities = await _reservationDal.GetListWithReservationByAcceptedAsync(userId);
-            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
+            return entities.Select(entity =>
+            {
+                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
+                dto.DestinationCity = entity.Destination?.City;
+                return dto;
+            }).ToList();
         }
 
-        public async Task<IReadOnlyList<ResultReservationDto>> GetListWithReservationByPreviousAsync(int userId)
+        public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByPreviousAsync(int userId)
         {
             var entities = await _reservationDal.GetListWithReservationByPreviousAsync(userId);
-            return entities.Adapt<IReadOnlyList<ResultReservationDto>>();
+            return entities.Select(entity =>
+            {
+                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
+                dto.DestinationCity = entity.Destination?.City;
+                return dto;
+            }).ToList();
         }
     }
 }

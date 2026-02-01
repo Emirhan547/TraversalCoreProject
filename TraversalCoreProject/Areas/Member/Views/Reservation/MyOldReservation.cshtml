@@ -1,5 +1,5 @@
-﻿@using EntityLayer.Concrete
-@model List<Reservation>
+﻿@using DTOLayer.DTOs.ReservationDtos
+@model List<ResultReservationWithDestinationDto>
 @{
     ViewData["Title"] = "MyOldReservation";
     Layout = "~/Views/Shared/_MemberLayout.cshtml";
@@ -42,7 +42,7 @@
                                     <tr>
                                         <td>@count</td>
 
-                                        <td>@item.DestinationId</td>
+                                        <td>@item.DestinationCity</td>
                                         <td>@item.PersonCount</td>
                                         <td>@(((DateTime)item.ReservationDate).ToString("dd-MMM-yyyy"))</td>
                                         <td>@item.Status</td>

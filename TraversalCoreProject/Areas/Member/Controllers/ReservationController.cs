@@ -15,31 +15,61 @@ public class ReservationController : Controller
     {
         private readonly IDestinationService _destinationService;
         private readonly IReservationService _reservationService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IAuthService _authService;
 
-        public ReservationController(UserManager<AppUser> userManager, IReservationService reservationService, IDestinationService destinationService)
+        public ReservationController(IAuthService authService, IReservationService reservationService, IDestinationService destinationService)
         {
-            _userManager = userManager;
+            _authService = authService;
             _reservationService = reservationService;
             _destinationService = destinationService;
         }
 
         public async Task <IActionResult> MyCurrentReservation()
     {
-            var values = await _userManager.FindByNameAsync(User.Identity.Name);
-            var valuesList =await _reservationService.GetListWithReservationByAcceptedAsync(values.Id);
+            if (User.Identity?.Name is null)
+            {
+                return View();
+            }
+
+            var values = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (values == null)
+            {
+                return View();
+            }
+
+            var valuesList = await _reservationService.GetListWithReservationByAcceptedAsync(values.Id);
             return View(valuesList);
         }
     public async Task <IActionResult> MyOldReservation()
     {
-            var values = await _userManager.FindByNameAsync(User.Identity.Name);
-            var valuesList = _reservationService.GetListWithReservationByPreviousAsync(values.Id);
+            if (User.Identity?.Name is null)
+            {
+                return View();
+            }
+
+            var values = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (values == null)
+            {
+                return View();
+            }
+
+            var valuesList = await _reservationService.GetListWithReservationByPreviousAsync(values.Id);
             return View(valuesList);
         }
         public async Task<IActionResult> MyApprovalReservation()
         {
-            var values =await _userManager.FindByNameAsync(User.Identity.Name);
-            var valuesList= _reservationService.GetListWithReservationByWaitApprovalAsync(values.Id);
+            if (User.Identity?.Name is null)
+            {
+                return View();
+            }
+
+            var values = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (values == null)
+            {
+                return View();
+            }
+
+            var valuesList = await _reservationService.GetListWithReservationByWaitApprovalAsync(values.Id);
             return View(valuesList);
         }   
         [HttpGet] 
@@ -58,7 +88,16 @@ public class ReservationController : Controller
         [HttpPost]
         public async Task<IActionResult> NewReservation(CreateReservationDto reservation)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity?.Name is null)
+            {
+                return View(reservation);
+            }
+
+            var user = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return View(reservation);
+            }
             reservation.AppUserId = user.Id;
             reservation.Status = "Onay Bekliyor";
             reservation.ReservationDate = DateTime.Now;

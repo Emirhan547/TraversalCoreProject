@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BusinessLayer.Abstract;
+﻿using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using DTOLayer.DTOs.ContactDTOs;
@@ -35,16 +34,7 @@ namespace TraversalCoreProje.Controllers
         {
             if (ModelState.IsValid)
             {
-                var createContactUsDto = new CreateContactUsDto
-                {
-                    MessageBody = model.MessageBody,
-                    Mail = model.Mail,
-                    MessageStatus = true,
-                    Name = model.Name,
-                    Subject = model.Subject,
-                    MessageDate = Convert.ToDateTime(DateTime.Now.ToShortDateString())
-                };
-                await _contactUsService.AddAsync(createContactUsDto);
+                await _contactUsService.AddAsync(model);
 
                 return RedirectToAction("Index", "Default");
             }

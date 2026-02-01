@@ -11,5 +11,6 @@ namespace BusinessLayer.Abstract
 {
     public interface IAnnouncementService:IGenericService<ResultAnnouncementDto,CreateAnnouncementDto,UpdateAnnouncementDto>
     {
+        Task<UpdateAnnouncementDto?> GetUpdateDtoAsync(int id);
     }
 }

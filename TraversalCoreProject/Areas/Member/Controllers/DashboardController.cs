@@ -1,4 +1,5 @@
-﻿using EntityLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,18 +8,24 @@ namespace TraversalCoreProject.Areas.Member.Controllers
     [Area("Member")]
     public class DashboardController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IAuthService _authService;
 
-        public DashboardController(UserManager<AppUser> userManager)
+        public DashboardController(IAuthService authService)
         {
-            _userManager = userManager;
+            _authService = authService;
         }
 
         public async Task <IActionResult> Index()
         {
-            var values = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewBag.userName = values.Name + " "+ values.Surname;
-            ViewBag.userImage=values.ImageUrl;
+            if (User.Identity?.Name is not null)
+            {
+                var values = await _authService.GetByUserNameAsync(User.Identity.Name);
+                if (values != null)
+                {
+                    ViewBag.userName = $"{values.Name} {values.Surname}";
+                    ViewBag.userImage = values.ImageUrl;
+                }
+            }
             return View();
         }
         public async Task<IActionResult>MemberDashboard()

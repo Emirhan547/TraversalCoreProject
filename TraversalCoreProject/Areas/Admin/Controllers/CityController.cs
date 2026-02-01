@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.DestinatonDtos;
-using EntityLayer.Concrete;
+
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -24,21 +24,18 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         public async Task<IActionResult> CityList()
         {
             var values = await _destinationService.GetListAsync();
-            var jsonCity = JsonConvert.SerializeObject(values);
-            return Json(jsonCity);
+            return Json(values);
         }
         [HttpPost]
         public async Task<IActionResult> AddCityDestination(CreateDestinationDto destination)
         {
           await  _destinationService.AddAsync(destination);
-            var values = JsonConvert.SerializeObject(destination);
-            return Json(values);
+            return Json(destination); ;
         }
-        public IActionResult GetById(int DestinationId)
-        { 
-            var values = _destinationService.GetByIdAsync(DestinationId);
-            var jsonValues = JsonConvert.SerializeObject(values);
-            return Json(jsonValues);
+        public async Task<IActionResult> GetById(int DestinationId)
+        {
+            var values = await _destinationService.GetByIdAsync(DestinationId);
+            return Json(values);
         }
         public async Task<IActionResult> DeleteCity(int id)
         {
@@ -48,8 +45,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCity(UpdateDestinationDto destination)
         { 
            await _destinationService.UpdateAsync(destination);
-            var v = JsonConvert.SerializeObject(destination);
-            return Json(v);
+            return Json(destination);
         }
 
     }

@@ -17,11 +17,12 @@ namespace TraversalCoreProje.Controllers
     public class DestinationController : Controller
     {
         private readonly IDestinationService _destinationService;
+        private readonly IAuthService _authService;
 
-        private readonly UserManager<AppUser> _userManager;
-        public DestinationController(UserManager<AppUser> userManager, IDestinationService destinationService)
+        
+        public DestinationController(IAuthService authService, IDestinationService destinationService)
         {
-            _userManager = userManager;
+            _authService = authService;
             _destinationService = destinationService;
         }
         public async Task<IActionResult> Index()
@@ -35,8 +36,14 @@ namespace TraversalCoreProje.Controllers
         {
             ViewBag.i = id;
             ViewBag.destID = id;
-            var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewBag.userID = value.Id;
+            if (User.Identity?.Name is not null)
+            {
+                var value = await _authService.GetByUserNameAsync(User.Identity.Name);
+                if (value != null)
+                {
+                    ViewBag.userID = value.Id;
+                }
+            }
             var values = await _destinationService.GetDestinationWithGuideAsync(id);
             return View(values);
         }

@@ -1,8 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
 using DTOLayer.DTOs.DestinatonDtos;
-using EntityLayer.Concrete;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Threading.Tasks;

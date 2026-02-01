@@ -3,7 +3,7 @@
 
 namespace BusinessLayer.Abstract.AbstractUow
 {
-    public interface IAccountService : IGenericUowService<ResultAccountDto, CreateAccountDto, UpdateAccountDto>
+    public interface IAccountService : IGenericUowService<CreateAccountDto, UpdateAccountDto, ResultAccountDto>
     {
     }
 }

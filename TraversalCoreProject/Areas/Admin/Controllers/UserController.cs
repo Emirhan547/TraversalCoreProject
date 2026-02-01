@@ -18,9 +18,9 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             _reservationService = reservationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var values = _appUserService.GetListAsync();
+            var values = await _appUserService.GetListAsync();
             return View(values);
         }
         public async Task<IActionResult> DeleteUser(int id)

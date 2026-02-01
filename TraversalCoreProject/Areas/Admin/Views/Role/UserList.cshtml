@@ -1,7 +1,9 @@
-﻿@model List<AppUser>
+﻿@using DTOLayer.DTOs.AppUserDtos
+@model List<ResultAppUserDto>
 @{
     ViewData["Title"] = "UserList";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
 }
 
 <h1>UserList</h1>

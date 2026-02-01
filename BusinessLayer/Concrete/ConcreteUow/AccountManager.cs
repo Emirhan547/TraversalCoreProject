@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract.AbstractUow;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.AccountDtos;
 using EntityLayer.Concrete;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,27 +23,54 @@ namespace BusinessLayer.Concrete.ConcreteUow
             _uowDal = uowDal;
         }
 
-        public Account TGetByID(int id)
+        public async Task AddAsync(CreateAccountDto dto)
         {
-            return _accountDal.GetByID(id);
+            var entity = dto.Adapt<Account>();
+            _accountDal.Insert(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TInsert(Account t)
+        public Task<ResultAccountDto?> GetByIdAsync(int id)
         {
-            _accountDal.Insert(t);
-            _uowDal.SaveChangesAsync();
+            var entity = _accountDal.GetByID(id);
+            return Task.FromResult(entity?.Adapt<ResultAccountDto?>());
         }
 
-        public void TMultiUpdate(List<Account> t)
+        public async Task UpdateAsync(UpdateAccountDto dto)
         {
-            _accountDal.MultiUpdate(t);
-            _uowDal.SaveChangesAsync();
+            var entity = _accountDal.GetByID(dto.Id);
+            if (entity == null)
+            {
+                return;
+            }
+
+            dto.Adapt(entity);
+            _accountDal.Update(entity);
+            await _uowDal.SaveChangesAsync();
         }
 
-        public void TUpdate(Account t)
+        public async Task UpdateRangeAsync(List<UpdateAccountDto> dtos)
         {
-            _accountDal.Update(t);
-            _uowDal.SaveChangesAsync();
+            var entities = new List<Account>();
+            foreach (var dto in dtos)
+            {
+                var entity = _accountDal.GetByID(dto.Id);
+                if (entity == null)
+                {
+                    continue;
+                }
+
+                dto.Adapt(entity);
+                entities.Add(entity);
+            }
+
+            if (entities.Count == 0)
+            {
+                return;
+            }
+
+            _accountDal.MultiUpdate(entities);
+            await _uowDal.SaveChangesAsync();
         }
     }
 }

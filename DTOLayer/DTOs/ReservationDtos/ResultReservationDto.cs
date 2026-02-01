@@ -18,5 +18,6 @@ namespace DTOLayer.DTOs.ReservationDtos
         public string Description { get; set; }
         public string Status { get; set; }
         public int DestinationId { get; set; }
+        public string DestinationCity { get; set; }
     }
 }

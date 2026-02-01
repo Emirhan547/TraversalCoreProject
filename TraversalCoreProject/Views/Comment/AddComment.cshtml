@@ -1,4 +1,6 @@
-﻿@if (User.Identity.IsAuthenticated)
+﻿@model AddCommentViewModel
+
+@if (User.Identity.IsAuthenticated)
 {
     <div class="leave-comment-form mt-5" id="reply">
         <h4 class="side-title mb-2">Bir yorum bırakın</h4>
@@ -6,11 +8,13 @@
             İşaretli alanları doldurmanız gerekmektedir.
         </p>
         <form method="post" asp-action="AddComment" asp-controller="Comment">
-            <input type="hidden" name="DestinationID" value="@ViewBag.destID" />
-            <input type="hidden" name="AppUserID" value="@ViewBag.userID" />
+            
+            <input type="hidden" asp-for="DestinationId" />
+            <input type="hidden" asp-for="AppUserId" />
             <div class="form-group">
-                <textarea name="CommentContent" class="form-control" placeholder="Yorumunuz*" required=""
-                      spellcheck="false"></textarea>
+                
+                <textarea asp-for="CommentContent" class="form-control" placeholder="Yorumunuz*" required=""
+                          spellcheck="false"></textarea>
             </div>
             <div class="submit text-right">
                 <button class="btn btn-style btn-primary" type="submit" id="btnsave">Yorum Yap</button>

@@ -1,8 +1,9 @@
-﻿@using EntityLayer.Concrete
-@model List<AppUser>
+﻿@using DTOLayer.DTOs.AppUserDtos
+@model List<ResultAppUserDto>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
     int sayac = 0;
 }
 

@@ -15,7 +15,7 @@ namespace TraversalCoreProject.ViewComponents.AdminDashboard
         public IViewComponentResult Invoke()
         {
             ViewBag.v1 = _context.Destinations.Count();
-            ViewBag.v2 = _context.Users.Count();
+      
             return View();
         }
 

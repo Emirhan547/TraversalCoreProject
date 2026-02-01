@@ -15,7 +15,7 @@ namespace TraversalCoreProject.ViewComponents.Default
             _destinationService = destinationService;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var values =await _destinationService.GetListAsync();
             return View(values);

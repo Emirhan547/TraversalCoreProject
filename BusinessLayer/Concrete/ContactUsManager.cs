@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.UnitOfWork;
+using DTOLayer.DTOs.ContactDTOs;
 using DTOLayer.DTOs.ContactUsDtos;
 using EntityLayer.Concrete;
 using Mapster;
@@ -20,7 +21,7 @@ namespace BusinessLayer.Concrete
             _contactUsDal = contactUsDal;
         }
 
-        // -------------------- CREATE --------------------
+        
 
         public async Task AddAsync(CreateContactUsDto dto)
         {
@@ -29,7 +30,7 @@ namespace BusinessLayer.Concrete
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- UPDATE --------------------
+        
 
         public async Task UpdateAsync(UpdateContactUsDto dto)
         {
@@ -42,7 +43,7 @@ namespace BusinessLayer.Concrete
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- DELETE --------------------
+      
 
         public async Task DeleteAsync(int id)
         {
@@ -54,7 +55,7 @@ namespace BusinessLayer.Concrete
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- GET --------------------
+       
 
         public async Task<ResultContactUsDto?> GetByIdAsync(int id)
         {
@@ -68,7 +69,13 @@ namespace BusinessLayer.Concrete
             return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        // -------------------- CUSTOM --------------------
+        public async Task AddAsync(SendMessageDto dto)
+        {
+            var createDto = dto.Adapt<CreateContactUsDto>();
+            createDto.MessageStatus = true;
+            createDto.MessageDate = DateTime.Now.Date;
+            await AddAsync(createDto);
+        }
 
         public async Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync()
         {

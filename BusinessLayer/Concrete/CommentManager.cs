@@ -76,16 +76,33 @@ namespace BusinessLayer.Concrete
             return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
         }
 
-        public async Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAsync()
+        public async Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAsync()
         {
             var entities = await _commentDal.GetCommentsWithDestinationAsync();
-            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
+            return entities.Select(entity =>
+            {
+                var dto = entity.Adapt<ResultCommentWithDetailsDto>();
+                dto.DestinationCity = entity.Destination?.City;
+                return dto;
+            }).ToList();
         }
 
-        public async Task<IReadOnlyList<ResultCommentDto>> GetCommentsWithDestinationAndUserAsync(int userId)
+        public async Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAndUserAsync(int userId)
         {
             var entities = await _commentDal.GetCommentsWithDestinationAndUserAsync(userId);
-            return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
+            return entities.Select(entity =>
+            {
+                var dto = entity.Adapt<ResultCommentWithDetailsDto>();
+                dto.DestinationCity = entity.Destination?.City;
+                if (entity.AppUser != null)
+                {
+                    dto.AppUserName = entity.AppUser.Name;
+                    dto.AppUserSurname = entity.AppUser.Surname;
+                    dto.AppUserImageUrl = entity.AppUser.ImageUrl;
+                }
+
+                return dto;
+            }).ToList();
         }
     }
 }

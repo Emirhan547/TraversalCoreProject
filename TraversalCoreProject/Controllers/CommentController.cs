@@ -16,22 +16,14 @@ namespace TraversalCoreProje.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        private readonly UserManager<EntityLayer.Concrete.AppUser> _userManager;
-        public CommentController(UserManager<AppUser> userManager, ICommentService commentService)
+ 
+        public CommentController(ICommentService commentService)
         {
-            _userManager = userManager;
+           
             _commentService = commentService;
         }
 
-        [HttpGet]
-        public PartialViewResult AddComment()
-        {
-            // ViewBag.destID = id;
-            //var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            //ViewBag.userID = 5;
-            // ViewBag.a = "merhaba";
-            return PartialView();
-        }
+        
         [HttpPost]
         public async Task<IActionResult> AddComment(CreateCommentDto comment)
         {

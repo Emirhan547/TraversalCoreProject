@@ -11,7 +11,7 @@
       data-theme="theme-default"
       data-assets-path="../assets/"
       data-template="vertical-menu-template-free">
-      @await Html.PartialAsync("/Views/Admin/PartialHeader.cshtml")
+      @await Html.PartialAsync("PartialHeader")
 
 
 
@@ -20,15 +20,15 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                @await Html.PartialAsync("/Views/Admin/PartialAppBrandDemo.cshtml")
+                @await Html.PartialAsync("PartialAppBrandDemo")
                 <div class="menu-inner-shadow"></div>
 
-                @await Html.PartialAsync("/Views/Admin/PartialSideBar.cshtml")
+                @await Html.PartialAsync("PartialSideBar")
             </aside>
 
             <div class="layout-page">
              
-                @await Html.PartialAsync("/Views/Admin/PartialNavBar.cshtml")
+                @await Html.PartialAsync("PartialNavBar")
 
                 <div class="content-wrapper">
 
@@ -37,7 +37,7 @@
 
                       @RenderBody()
                     </div>
-                    @await Html.PartialAsync("/Views/Admin/PartialFooter.cshtml")
+                    @await Html.PartialAsync("PartialFooter")
                     <!-- / Footer -->
 
                     <div class="content-backdrop fade"></div>
@@ -47,6 +47,6 @@
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 
-    @await Html.PartialAsync("/Views/Admin/PartialScript.cshtml")
+    @await Html.PartialAsync("PartialScript")
 </body>
 </html>

@@ -29,7 +29,11 @@ namespace BusinessLayer.Concrete
            await _uowDal.SaveChangesAsync();
 
         }
-
+        public async Task<UpdateAnnouncementDto?> GetUpdateDtoAsync(int id)
+        {
+            var values = await _announcementDal.GetByIdAsync(id);
+            return values?.Adapt<UpdateAnnouncementDto?>();
+        }
         public async Task DeleteAsync(int id)
         {
             var values = await _announcementDal.GetByIdAsync(id);

@@ -1,4 +1,6 @@
-﻿using EntityLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AppUserDtos;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TraversalCoreProject.Areas.Member.Models;
@@ -9,20 +11,29 @@ namespace TraversalCoreProject.Areas.Member.Controllers
     [Route("Member/[controller]/[action]")]
     public class ProfileController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IAuthService _authService;
 
-        public ProfileController(UserManager<AppUser> userManager)
+        public ProfileController(IAuthService authService)
         {
-            _userManager = userManager;
+            _authService = authService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var values = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity?.Name is null)
+            {
+                return View(new UserEditViewModel());
+            }
+
+            var values = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (values == null)
+            {
+                return View(new UserEditViewModel());
+            }
             UserEditViewModel userEditViewModel = new UserEditViewModel();
 
 
-                userEditViewModel.name = values.Name;
+            userEditViewModel.name = values.Name;
             userEditViewModel.surname = values.Surname;
             userEditViewModel.phonenumber = values.PhoneNumber;
             userEditViewModel.mail = values.Email;
@@ -32,7 +43,26 @@ namespace TraversalCoreProject.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserEditViewModel p)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity?.Name is null)
+            {
+                return View();
+            }
+
+            var user = await _authService.GetByUserNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return View();
+            }
+
+            var profileDto = new UpdateAppUserProfileDto
+            {
+                Id = user.Id,
+                Name = p.name,
+                Surname = p.surname,
+                Email = p.mail,
+                PhoneNumber = p.phonenumber,
+                Password = p.password
+            };
             if (p.Image != null)
             {
                 var resource = Directory.GetCurrentDirectory();
@@ -41,12 +71,10 @@ namespace TraversalCoreProject.Areas.Member.Controllers
                 var savelocation = resource + "/wwwroot/userimages/" + imagename;
                 var stream = new FileStream(savelocation, FileMode.Create);
                 await p.Image.CopyToAsync(stream);
-                user.ImageUrl = imagename;
+                profileDto.ImageUrl = imagename;
             }
-            user.Name = p.name;
-            user.Surname = p.surname;
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, p.password);
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _authService.UpdateProfileAsync(profileDto);
+            
             if (result.Succeeded)
             {
                 return RedirectToAction("SignIn", "Login");

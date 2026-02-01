@@ -29,7 +29,8 @@ namespace BusinessLayer.Container
 
             services.AddScoped<IAppUserService, AppUserManager>();
             services.AddScoped<IAppUserDal, EfAppUserDal>();
-
+            services.AddScoped<IAuthService, AuthManager>();
+            services.AddScoped<IAppRoleService, AppRoleManager>();
             services.AddScoped<IReservationService, ReservationManager>();
             services.AddScoped<IReservationDal, EfReservationDal>();
 

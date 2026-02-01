@@ -1,6 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.AnnouncementDtos;
-using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -47,12 +46,12 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateAnnouncement(int id)
         {
-            var values = await _announcementService.GetByIdAsync(id);
-            if (values is null)
+            var model = await _announcementService.GetUpdateDtoAsync(id);
+            if (model is null)
             {
                 return NotFound();
             }
-            var model = values.Adapt<UpdateAnnouncementDto>();
+      
             return View(model);
         }
 

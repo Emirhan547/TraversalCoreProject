@@ -1,7 +1,13 @@
-﻿using EntityLayer.Concrete;
-using Microsoft.AspNetCore.Identity;
+﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AppRoleDtos;
+using EntityLayer.Concrete;
+
+
+using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AppRoleDtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TraversalCoreProject.Areas.Admin.Models;
 
@@ -11,19 +17,17 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
     [Route("Admin/Role")]
     public class RoleController : Controller
     {
-        private readonly RoleManager<AppRole>_roleManager;
-        private readonly UserManager<AppUser>_userManager;
+        private readonly IAppRoleService _appRoleService;
 
 
-        public RoleController(RoleManager<AppRole> roleManager, UserManager<AppUser> userManager)
+        public RoleController(IAppRoleService appRoleService)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
+            _appRoleService = appRoleService;
         }
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            var values =await _roleManager.Roles.ToListAsync();
+            var values = await _appRoleService.GetListAsync();
             return View(values);
         }
 
@@ -37,12 +41,12 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [Route("CreateRole")]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel createRoleViewModel)
         {
-            AppRole role = new AppRole()
+            var role = new CreateAppRoleDto
             {
                 Name = createRoleViewModel.RoleName
             };
 
-            var result = await _roleManager.CreateAsync(role);
+            var result = await _appRoleService.CreateAsync(role);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index");
@@ -56,19 +60,23 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [Route("DeleteRole/{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
-            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
-            var result = await _roleManager.DeleteAsync(value);
-                return RedirectToAction("Index");
-           
+            await _appRoleService.DeleteAsync(id);
+            return RedirectToAction("Index");
+
         }
         [HttpGet]
         [Route("UpdateRole/{id}")]
         public async Task<IActionResult> UpdateRole(int id)
         {
-            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
-            UpdateRoleViewModel updateRoleViewModel = new UpdateRoleViewModel()
+            var value = await _appRoleService.GetByIdAsync(id);
+            if (value == null)
             {
-                RoleID=value.Id,
+                return RedirectToAction("Index");
+            }
+
+            UpdateRoleViewModel updateRoleViewModel = new UpdateRoleViewModel
+            {
+                RoleID = value.Id,
                 RoleName = value.Name
             };
             return View(updateRoleViewModel);
@@ -77,53 +85,34 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
         [Route("UpdateRole/{id}")]
         public async Task<IActionResult> UpdateRole(UpdateRoleViewModel updateRoleViewModel)
         {
-            var value =await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == updateRoleViewModel.RoleID);
-            value.Name = updateRoleViewModel.RoleName;
-            await _roleManager.UpdateAsync(value);
+            var dto = new UpdateAppRoleDto
+            {
+                Id = updateRoleViewModel.RoleID,
+                Name = updateRoleViewModel.RoleName
+            };
+            await _appRoleService.UpdateAsync(dto);
             return RedirectToAction("Index");
         }
         [Route("UserList")]
         public async Task< IActionResult> UserList()
         {
-            var values=await _userManager.Users.ToListAsync();
+            var values = await _appRoleService.GetUsersAsync();
             return View(values);
         }
         [Route("AssignRole/{id}")]
         [HttpGet]
         public async Task <IActionResult>AssignRole(int id)
         {
-            var user=await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
-            TempData["UserId"]=user.Id;
-            var roles=await _roleManager.Roles.ToListAsync();
-            var userRoles = await _userManager.GetRolesAsync(user);
-            List<RoleAssignViewModel> roleAssignViewModels = new List<RoleAssignViewModel>();
-            foreach (var item in roles)
-            {
-                RoleAssignViewModel model=new RoleAssignViewModel();
-                model.RoleId = item.Id;
-                model.RoleName = item.Name;
-                model.RoleExist=userRoles.Contains(item.Name);
-                roleAssignViewModels.Add(model);
-            }
-            return View(roleAssignViewModels);
+           TempData["UserId"] = id;
+            var roleAssignments = await _appRoleService.GetRoleAssignmentsAsync(id);
+            return View(roleAssignments);
         }
         [HttpPost]
         [Route("AssignRole/{id}")]
-        public async Task <IActionResult>AssignRole(List<RoleAssignViewModel> model)
+        public async Task<IActionResult> AssignRole(List<RoleAssignDto> model)
         {
-            var userid=(int)TempData["userId"];
-            var user =await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userid);
-            foreach (var item in model)
-            {
-                if (item.RoleExist)
-                {
-                    await _userManager.AddToRoleAsync(user, item.RoleName);
-                }
-                else 
-                {
-                    await _userManager.RemoveFromRoleAsync(user, item.RoleName);
-                }
-            }
+            var userid = (int)TempData["userId"];
+            await _appRoleService.UpdateRoleAssignmentsAsync(userid, model);
             return RedirectToAction("UserList");
         }
 

@@ -1,9 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.ValidationRules;
 using DTOLayer.DTOs.GuideDtos;
-using EntityLayer.Concrete;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

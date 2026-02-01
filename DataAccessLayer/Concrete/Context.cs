@@ -1,11 +1,14 @@
 ﻿using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Concrete
 {
-    public class Context : DbContext
+    public class Context
+        : IdentityDbContext<AppUser, AppRole, int>
     {
-        public Context(DbContextOptions<Context> options) : base(options)
+        public Context(DbContextOptions<Context> options)
+            : base(options)
         {
         }
 
@@ -25,5 +28,4 @@ namespace DataAccessLayer.Concrete
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Account> Accounts { get; set; }
     }
-
 }

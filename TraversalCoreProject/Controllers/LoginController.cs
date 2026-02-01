@@ -1,4 +1,6 @@
-﻿using EntityLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using DTOLayer.DTOs.AppUserDtos;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +11,11 @@ namespace TraversalCoreProje.Controllers
     [AllowAnonymous]
     public class LoginController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAuthService _authService;
 
-        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public LoginController(IAuthService authService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -26,7 +26,7 @@ namespace TraversalCoreProje.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(UserRegisterViewModel p)
         {
-            AppUser appUser = new AppUser()
+            var appUser = new CreateAppUserDto
             {
                 Name = p.Name,
                 Surname = p.Surname,
@@ -35,7 +35,7 @@ namespace TraversalCoreProje.Controllers
             };
             if (p.Password == p.ConfirmPassword)
             {
-                var result = await _userManager.CreateAsync(appUser, p.Password);
+                var result = await _authService.CreateUserAsync(appUser, p.Password);
 
                 if (result.Succeeded)
                 {
@@ -62,7 +62,7 @@ namespace TraversalCoreProje.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(p.UserName, p.Password, false, true);
+                var result = await _authService.PasswordSignInAsync(p.UserName, p.Password, false, true);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Profile", new { area = "Member" });
