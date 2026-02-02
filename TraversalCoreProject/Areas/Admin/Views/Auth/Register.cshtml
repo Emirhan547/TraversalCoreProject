@@ -1,0 +1,97 @@
+﻿@using DTOLayer.DTOs.AppUserDtos
+@model AppUserRegisterDtos
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <title>Traversal Admin Kayıt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+          content="Traversal admin kayıt, admin paneli kayıt, kullanıcı oluşturma" />
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <link rel="stylesheet" href="~/web/css/style.css" type="text/css" media="all" />
+</head>
+<body>
+    <section class="w3l-login-6">
+        <div class="login-hny">
+            <div class="form-content">
+                <div class="form-right">
+                    <div class="overlay">
+                        <div class="grid-info-form">
+                            <h5>Traversal Admin</h5>
+                            <h3>Yönetici Hesabı Oluşturun</h3>
+                            <p>
+                                Yönetim paneline erişmek için yeni bir yönetici hesabı oluşturabilirsiniz.
+                            </p>
+                            <a asp-area="Admin" asp-controller="Auth" asp-action="Login" class="read-more-1 btn">Giriş Yap</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-left">
+                    <div class="middle">
+                        <h4>Admin Kaydı</h4>
+                        <p>Yeni yönetici bilgilerini doldurun.</p>
+                    </div>
+                    <form asp-area="Admin" asp-controller="Auth" asp-action="Register" method="post" class="signin-form">
+                        <div class="form-input">
+                            <label>Adınız</label>
+                            <input type="text" asp-for="Name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-input">
+                            <label>Soyadınız</label>
+                            <input type="text" asp-for="Surname" />
+                            <span asp-validation-for="Surname" class="text-danger"></span>
+                        </div>
+                        <div class="form-input">
+                            <label>Kullanıcı Adınız</label>
+                            <input type="text" asp-for="UserName" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-input">
+                            <label>Mail Adresiniz</label>
+                            <input type="email" asp-for="Mail" />
+                            <span asp-validation-for="Mail" class="text-danger"></span>
+                        </div>
+                        <div class="form-input">
+                            <label>Şifreniz</label>
+                            <input type="password" asp-for="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-input">
+                            <label>Şifre Tekrar</label>
+                            <input type="password" asp-for="ConfirmPassword" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                        <label class="container">
+                            Şartları okudum <a href="#">Kabul ediyorum</a>
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                        <button class="btn">Kayıt Ol</button>
+                    </form>
+                    <div class="copy-right text-center">
+                        <p>
+                            © @DateTime.Now.Year Tüm Hakları Saklıdır
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.DestinatonDtos;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CityController : Controller
     {
         private readonly IDestinationService _destinationService;

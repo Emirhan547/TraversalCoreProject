@@ -1,13 +1,14 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.GuideDtos;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
-    
+
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/Guide")]
     public class GuideController : Controller
     {

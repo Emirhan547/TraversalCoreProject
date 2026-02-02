@@ -1,5 +1,6 @@
 ﻿using DTOLayer.DTOs.MailDTOs;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using TraversalCoreProject.Models;
@@ -8,6 +9,7 @@ using TraversalCoreProject.Models;
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class MailController : Controller
     {
         [HttpGet]

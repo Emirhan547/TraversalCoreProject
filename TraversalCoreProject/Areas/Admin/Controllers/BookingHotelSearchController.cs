@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
-    [AllowAnonymous]
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class BookingHotelSearchController : Controller
     {
         public async Task <IActionResult> Index()

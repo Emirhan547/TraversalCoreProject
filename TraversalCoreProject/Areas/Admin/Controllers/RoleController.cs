@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.AppRoleDtos;
-
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/Role")]
     public class RoleController : Controller
     {

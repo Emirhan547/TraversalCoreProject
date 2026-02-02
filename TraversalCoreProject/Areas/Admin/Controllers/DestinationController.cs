@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DTOLayer.DTOs.DestinatonDtos;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TraversalCoreProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class DestinationController : Controller
     {
         private readonly IDestinationService _destinationService;

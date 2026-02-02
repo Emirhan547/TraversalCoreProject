@@ -3,6 +3,7 @@ using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -80,8 +81,29 @@ services.AddMvc()
 
 services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Login/SignIn/";
+    options.LoginPath = "/Login/SignIn";
+    options.AccessDeniedPath = "/Login/SignIn";
+
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            var returnUrl = context.Request.Query["ReturnUrl"].ToString().ToLower();
+
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl.StartsWith("/admin"))
+            {
+                context.Response.Redirect("/Admin/Auth/Login");
+            }
+            else
+            {
+                context.Response.Redirect("/Login/SignIn");
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
+
 
 // BUILD
 var app = builder.Build();
@@ -107,8 +129,9 @@ app.UseStatusCodePagesWithReExecute("/ErrorPage/Error404", "?code={0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
+
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 var suppertedCultures = new[] { "en", "fr", "es", "tr", "de" };
@@ -120,12 +143,13 @@ var localizationOptions = new RequestLocalizationOptions()
 app.UseRequestLocalization(localizationOptions);
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Default}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
 );
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Default}/{action=Index}/{id?}");
+
 
 app.Run();
