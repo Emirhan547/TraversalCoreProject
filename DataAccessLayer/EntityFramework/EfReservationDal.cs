@@ -18,28 +18,12 @@ namespace DataAccessLayer.EntityFramework
             _context = context;
         }
 
-        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByWaitApprovalAsync(int userId)
+        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByStatusAsync(int userId, string status)
         {
             return await _context.Reservations
                 .Include(x => x.Destination)
-                .Where(x => x.Status == "Onay Bekliyor" && x.AppUserId == userId)
+                .Where(x => x.Status == status && x.AppUserId == userId)
                 .ToListAsync();
         }
-
-        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByAcceptedAsync(int userId)
-        {
-            return await _context.Reservations
-                .Include(x => x.Destination)
-                .Where(x => x.Status == "Onaylandı" && x.AppUserId == userId)
-                .ToListAsync();
         }
-
-        public async Task<IReadOnlyList<Reservation>> GetListWithReservationByPreviousAsync(int userId)
-        {
-            return await _context.Reservations
-                .Include(x => x.Destination)
-                .Where(x => x.Status == "Geçmiş Rezervasyon" && x.AppUserId == userId)
-                .ToListAsync();
-        }
-    }
 }

@@ -18,7 +18,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var values =await _contactUsService.GetListContactUsByTrueAsync();
+            var values = await _contactUsService.GetListByStatusAsync(true);
             return View(values);
         }
     }

@@ -20,18 +20,16 @@ namespace BusinessLayer.Concrete
             _uowDal = uowDal;
         }
 
-        // -------------------- CREATE --------------------
-
-        public async Task AddAsync(CreateDestinationDto dto)
+        public async Task AddAsync(DestinationInputDto dto)
         {
             var entity = dto.Adapt<Destination>();
+            entity.Status = true;
+            entity.Date = DateTime.Now;
             await _destinationDal.AddAsync(entity);
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- UPDATE --------------------
-
-        public async Task UpdateAsync(UpdateDestinationDto dto)
+        public async Task UpdateAsync(DestinationInputDto dto)
         {
             var entity = await _destinationDal.GetByIdAsync(dto.Id);
             if (entity == null)
@@ -42,8 +40,6 @@ namespace BusinessLayer.Concrete
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- DELETE --------------------
-
         public async Task DeleteAsync(int id)
         {
             var entity = await _destinationDal.GetByIdAsync(id);
@@ -53,8 +49,6 @@ namespace BusinessLayer.Concrete
              _destinationDal.DeleteAsync(entity);
             await _uowDal.SaveChangesAsync();
         }
-
-        // -------------------- GET --------------------
 
         public async Task<ResultDestinationDto?> GetByIdAsync(int id)
         {
@@ -67,8 +61,6 @@ namespace BusinessLayer.Concrete
             var entities = await _destinationDal.GetListAsync();
             return entities.Adapt<IReadOnlyList<ResultDestinationDto>>();
         }
-
-        // -------------------- CUSTOM --------------------
 
         public async Task<ResultDestinationDto?> GetDestinationWithGuideAsync(int id)
         {

@@ -18,17 +18,10 @@ namespace DataAccessLayer.EntityFramework
             _context = context;
         }
 
-        public async Task<IReadOnlyList<ContactUs>> GetListContactUsByTrueAsync()
+        public async Task<IReadOnlyList<ContactUs>> GetListByStatusAsync(bool status)
         {
             return await _context.ContactUses
-                .Where(x => x.MessageStatus == true)
-                .ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<ContactUs>> GetListContactUsByFalseAsync()
-        {
-            return await _context.ContactUses
-                .Where(x => x.MessageStatus == false)
+               .Where(x => x.MessageStatus == status)
                 .ToListAsync();
         }
     }

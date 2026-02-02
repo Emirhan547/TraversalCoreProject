@@ -65,35 +65,30 @@ namespace BusinessLayer.Concrete
 
         public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByWaitApprovalAsync(int userId)
         {
-            var entities = await _reservationDal.GetListWithReservationByWaitApprovalAsync(userId);
-            return entities.Select(entity =>
-            {
-                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
-                dto.DestinationCity = entity.Destination?.City;
-                return dto;
-            }).ToList();
+          
+            return await GetReservationDtosByStatusAsync(userId, "Onay Bekliyor");
         }
 
         public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByAcceptedAsync(int userId)
         {
-            var entities = await _reservationDal.GetListWithReservationByAcceptedAsync(userId);
-            return entities.Select(entity =>
-            {
-                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
-                dto.DestinationCity = entity.Destination?.City;
-                return dto;
-            }).ToList();
+            return await GetReservationDtosByStatusAsync(userId, "Onaylandı");
         }
 
         public async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetListWithReservationByPreviousAsync(int userId)
         {
-            var entities = await _reservationDal.GetListWithReservationByPreviousAsync(userId);
-            return entities.Select(entity =>
-            {
-                var dto = entity.Adapt<ResultReservationWithDestinationDto>();
-                dto.DestinationCity = entity.Destination?.City;
-                return dto;
-            }).ToList();
+            return await GetReservationDtosByStatusAsync(userId, "Geçmiş Rezervasyon");
+        }
+        private async Task<IReadOnlyList<ResultReservationWithDestinationDto>> GetReservationDtosByStatusAsync(int userId, string status)
+        {
+            var entities = await _reservationDal.GetListWithReservationByStatusAsync(userId, status);
+            return entities.Select(MapToReservationWithDestination).ToList();
+        }
+
+        private static ResultReservationWithDestinationDto MapToReservationWithDestination(Reservation entity)
+        {
+            var dto = entity.Adapt<ResultReservationWithDestinationDto>();
+            dto.DestinationCity = entity.Destination?.City;
+            return dto;
         }
     }
 }

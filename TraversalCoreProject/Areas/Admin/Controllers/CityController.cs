@@ -28,7 +28,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return Json(values);
         }
         [HttpPost]
-        public async Task<IActionResult> AddCityDestination(CreateDestinationDto destination)
+        public async Task<IActionResult> AddCityDestination(DestinationInputDto destination)
         {
           await  _destinationService.AddAsync(destination);
             return Json(destination); ;
@@ -43,7 +43,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
            await _destinationService.DeleteAsync(id);
             return NoContent();
         }
-        public async Task<IActionResult> UpdateCity(UpdateDestinationDto destination)
+        public async Task<IActionResult> UpdateCity(DestinationInputDto destination)
         { 
            await _destinationService.UpdateAsync(destination);
             return Json(destination);

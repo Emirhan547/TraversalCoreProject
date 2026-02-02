@@ -9,5 +9,6 @@ namespace DataAccessLayer.Abstract
         Task<IReadOnlyList<Comment>> GetByDestinationIdAsync(int destinationId);
         Task<IReadOnlyList<Comment>> GetCommentsWithDestinationAsync();
         Task<IReadOnlyList<Comment>> GetCommentsWithDestinationAndUserAsync(int userId);
+        Task<int> GetCountByDestinationIdAsync(int destinationId);
     }
 }

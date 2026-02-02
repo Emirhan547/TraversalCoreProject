@@ -20,16 +20,12 @@ namespace BusinessLayer.Concrete
             _uowDal = uowDal;
         }
 
-        // -------------------- CREATE --------------------
-
         public async Task AddAsync(CreateCommentDto dto)
         {
             var entity = dto.Adapt<Comment>();
             await _commentDal.AddAsync(entity);
             await _uowDal.SaveChangesAsync();
         }
-
-        // -------------------- UPDATE --------------------
 
         public async Task UpdateAsync(UpdateCommentDto dto)
         {
@@ -42,8 +38,6 @@ namespace BusinessLayer.Concrete
             await _uowDal.SaveChangesAsync();
         }
 
-        // -------------------- DELETE --------------------
-
         public async Task DeleteAsync(int id)
         {
             var entity = await _commentDal.GetByIdAsync(id);
@@ -53,8 +47,6 @@ namespace BusinessLayer.Concrete
              _commentDal.DeleteAsync(entity);
             await _uowDal.SaveChangesAsync();
         }
-
-        // -------------------- GET --------------------
 
         public async Task<ResultCommentDto?> GetByIdAsync(int id)
         {
@@ -67,8 +59,6 @@ namespace BusinessLayer.Concrete
             var entities = await _commentDal.GetListAsync();
             return entities.Adapt<IReadOnlyList<ResultCommentDto>>();
         }
-
-        // -------------------- CUSTOM QUERIES --------------------
 
         public async Task<IReadOnlyList<ResultCommentDto>> GetByDestinationIdAsync(int destinationId)
         {
@@ -103,6 +93,11 @@ namespace BusinessLayer.Concrete
 
                 return dto;
             }).ToList();
+        }
+
+        public async Task<int> GetCountByDestinationIdAsync(int destinationId)
+        {
+            return await _commentDal.GetCountByDestinationIdAsync(destinationId);
         }
     }
 }

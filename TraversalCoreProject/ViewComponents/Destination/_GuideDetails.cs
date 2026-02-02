@@ -14,9 +14,9 @@ namespace TraversalCoreProje.ViewComponents.Destination
         {
             _guideService = guideService;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int guideId)
         {
-            var values =await _guideService.GetByIdAsync(1);
+            var values = await _guideService.GetByIdAsync(guideId);
             return View(values);
         }
     }

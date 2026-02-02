@@ -29,7 +29,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddDestination(CreateDestinationDto destination)
+        public async Task<IActionResult> AddDestination(DestinationInputDto destination)
         {
            await _destinationService.AddAsync(destination);
             return RedirectToAction("Index");
@@ -48,7 +48,7 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var model = new UpdateDestinationDto
+            var model = new DestinationInputDto
             {
                 Id = values.Id,
                 City = values.City,
@@ -57,19 +57,19 @@ namespace TraversalCoreProject.Areas.Admin.Controllers
                 Image = values.Image,
                 Description = values.Description,
                 Capacity = values.Capacity,
-                Status = values.Status,
+              
                 CoverImage = values.CoverImage,
                 Details1 = values.Details1,
                 Details2 = values.Details2,
                 Image2 = values.Image2,
-                Date = values.Date,
+  
                 GuideId = values.GuideId
             };
             return View(model);
 
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateDestination(UpdateDestinationDto destination)
+        public async Task<IActionResult> UpdateDestination(DestinationInputDto destination)
         {
 
           await _destinationService.UpdateAsync(destination);

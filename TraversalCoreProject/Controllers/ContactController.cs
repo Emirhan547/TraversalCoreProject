@@ -1,15 +1,9 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
-using DataAccessLayer.EntityFramework;
-using DTOLayer.DTOs.ContactDTOs;
+
 using DTOLayer.DTOs.ContactUsDtos;
-using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace TraversalCoreProje.Controllers
 {
@@ -30,7 +24,7 @@ namespace TraversalCoreProje.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(SendMessageDto model)
+        public async Task<IActionResult> Index(ContactMessageInputDto model)
         {
             if (ModelState.IsValid)
             {

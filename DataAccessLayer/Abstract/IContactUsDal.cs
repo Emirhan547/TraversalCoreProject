@@ -6,7 +6,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface IContactUsDal : IGenericDal<ContactUs>
     {
-        Task<IReadOnlyList<ContactUs>> GetListContactUsByTrueAsync();
-        Task<IReadOnlyList<ContactUs>> GetListContactUsByFalseAsync();
+        Task<IReadOnlyList<ContactUs>> GetListByStatusAsync(bool status);
     }
 }

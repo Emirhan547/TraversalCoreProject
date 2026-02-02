@@ -18,7 +18,7 @@ namespace DTOLayer.DTOs.CommentsDtos
         public string CommentContent { get; set; }
         public bool CommentState { get; set; }
         public int DestinationId { get; set; }
-        public Destination Destinations { get; set; } 
+        public Destination Destination { get; set; } 
         public int AppUserId { get; set; }
     }
 }

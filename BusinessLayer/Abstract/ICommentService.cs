@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
         Task<IReadOnlyList<ResultCommentDto>> GetByDestinationIdAsync(int destinationId);
         Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAsync();
         Task<IReadOnlyList<ResultCommentWithDetailsDto>> GetCommentsWithDestinationAndUserAsync(int userId);
+        Task<int> GetCountByDestinationIdAsync(int destinationId);
     }
 }

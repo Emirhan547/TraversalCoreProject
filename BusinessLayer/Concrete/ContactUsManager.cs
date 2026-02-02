@@ -21,18 +21,20 @@ namespace BusinessLayer.Concrete
             _contactUsDal = contactUsDal;
         }
 
-        
 
-        public async Task AddAsync(CreateContactUsDto dto)
+
+        public async Task AddAsync(ContactMessageInputDto dto)
         {
             var entity = dto.Adapt<ContactUs>();
+            entity.MessageStatus = true;
+            entity.MessageDate = DateTime.Now;
             await _contactUsDal.AddAsync(entity);
             await _uowDal.SaveChangesAsync();
         }
 
-        
 
-        public async Task UpdateAsync(UpdateContactUsDto dto)
+
+        public async Task UpdateAsync(ContactMessageInputDto dto)
         {
             var entity = await _contactUsDal.GetByIdAsync(dto.Id);
             if (entity == null)
@@ -69,25 +71,12 @@ namespace BusinessLayer.Concrete
             return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        public async Task AddAsync(SendMessageDto dto)
+        public async Task<IReadOnlyList<ResultContactUsDto>> GetListByStatusAsync(bool status)
         {
-            var createDto = dto.Adapt<CreateContactUsDto>();
-            createDto.MessageStatus = true;
-            createDto.MessageDate = DateTime.Now.Date;
-            await AddAsync(createDto);
-        }
-
-        public async Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync()
-        {
-            var entities = await _contactUsDal.GetListContactUsByTrueAsync();
+            var entities = await _contactUsDal.GetListByStatusAsync(status);
             return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
         }
 
-        public async Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByFalseAsync()
-        {
-            var entities = await _contactUsDal.GetListContactUsByFalseAsync();
-            return entities.Adapt<IReadOnlyList<ResultContactUsDto>>();
-        }
 
         public async Task ContactUsStatusChangeToFalseAsync(int id)
         {

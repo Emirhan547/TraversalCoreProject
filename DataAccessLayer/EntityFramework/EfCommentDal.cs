@@ -40,5 +40,11 @@ namespace DataAccessLayer.EntityFramework
                 .Include(x => x.AppUser)
                 .ToListAsync();
         }
+        public async Task<int> GetCountByDestinationIdAsync(int destinationId)
+        {
+            return await _context.Comments
+                .Where(x => x.DestinationId == destinationId)
+                .CountAsync();
+        }
     }
 }

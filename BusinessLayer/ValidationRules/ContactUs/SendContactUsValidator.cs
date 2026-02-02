@@ -1,4 +1,5 @@
 ﻿using DTOLayer.DTOs.ContactDTOs;
+using DTOLayer.DTOs.ContactUsDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ValidationRules.ContactUs
 {
-    public class SendContactUsValidator : AbstractValidator<SendMessageDto>
+    public class SendContactUsValidator : AbstractValidator<ContactMessageInputDto>
     {
         public SendContactUsValidator()
         {

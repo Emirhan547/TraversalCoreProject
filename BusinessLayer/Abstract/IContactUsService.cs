@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IContactUsService
-        : IGenericService<ResultContactUsDto, CreateContactUsDto, UpdateContactUsDto>
+    public interface IContactUsService : IGenericService<ResultContactUsDto, ContactMessageInputDto, ContactMessageInputDto>
+
     {
-        Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByTrueAsync();
-        Task<IReadOnlyList<ResultContactUsDto>> GetListContactUsByFalseAsync();
+        Task<IReadOnlyList<ResultContactUsDto>> GetListByStatusAsync(bool status);
         Task ContactUsStatusChangeToFalseAsync(int id);
-        Task AddAsync(SendMessageDto dto);
+      
     }
 }
